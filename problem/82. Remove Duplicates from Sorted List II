@@ -1,0 +1,62 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+
+
+struct ListNode* deleteDuplicates(struct ListNode* head){
+    
+    if(head == NULL || head->next == NULL) //無資料或單一資料
+        return head;
+    
+    struct ListNode *now = head; //目前所在位子
+    struct ListNode *run = head; //全部看過一次
+    struct ListNode *note;       //記錄頭 當頭有重複時使用
+        
+    int key = 0, first = 0 ; //key判斷有沒有連續不一樣，first判斷頭有沒有重複過
+    
+    if(head->val == head->next->val) //頭是否重複
+        first = -1;
+    
+    while(run->next != NULL){
+        
+        if(run->next->val != run->val && key < 2 && run->next != NULL){ //判斷是否連續兩次不一樣       
+            key++;
+        } else if(run->next->val == run->val){
+            key = 0;
+        }
+        
+         if(key == 2){ //當有連續2次不一樣時
+            if(first == -1){ //如果頭部有重複
+                now = run;
+                note = now;
+                first = 1;
+            }else{
+                now->next = run;
+                now = now->next;
+            }
+            key = 1;
+        }
+        
+        run = run->next;
+
+        if(run->next == NULL) //最後尾部是否有單獨一點
+            if(key == 1)
+                now->next = run;
+            else
+                now->next = NULL;
+    }
+    
+    //first 0時是頭部沒重複，-1是有重複但沒被更新過，1是有重複但被更新過
+    if(first == 0)
+        now = head;
+    if(first == -1)
+        now =now->next;
+    if(first == 1)
+        now = note;
+    
+    return now;
+}
