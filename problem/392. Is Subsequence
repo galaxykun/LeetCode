@@ -1,0 +1,27 @@
+bool isSubsequence(char * s, char * t){
+
+    int note_s = 0;
+    int note_t = 0;
+    
+    size_t length = strlen(s);
+
+    while(t[note_t] != '\0' && s[note_s] != '\0'){
+        if(s[note_s] == t[note_t++])
+            note_s++;
+    }
+        
+    if(length == note_s){
+        return true;
+    }
+    
+    return false;
+
+//網路參考
+//      while (*t && *s)
+//         s += *s == *t++;
+    
+//     return !*s;
+    
+    // for ( ; *t && *s; s += *s == *t++);
+    // return !*s;
+}
