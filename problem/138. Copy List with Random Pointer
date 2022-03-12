@@ -1,0 +1,135 @@
+/*val跟next第一次看過就能填完
+random處理 new list 只能透過迴圈去找舊的random對應new list的位子*/
+
+/**
+ * Definition for a Node.
+ * struct Node {
+ *     int val;
+ *     struct Node *next;
+ *     struct Node *random;
+ * };
+ */
+
+//建立新list順便把val跟next填好
+struct Node* createList(struct Node*head) {
+
+    struct Node *curr;
+    struct Node *return_list;
+    
+    curr = (struct Node*)malloc(sizeof(struct Node));
+
+    curr->next = NULL;
+    curr->random = NULL;
+    curr->val = 0;
+    
+    return_list = curr;
+    
+    while(head){
+            
+        struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
+        temp->next = NULL;
+        temp->random = NULL;
+        temp->val = 0;
+        
+        curr->next = temp;
+        curr = curr->next;
+        curr->val = head->val;
+        curr->random = NULL;
+        
+        head = head->next;
+    }
+
+    return return_list->next;
+}
+
+//找尋舊list的random對應的新list adress
+struct Node* get_index_adress(struct Node* head, struct Node* random, struct Node* return_adress){
+    if(random == NULL)
+        return NULL;
+    
+    while(head){
+        if(head == random)
+            break;
+        
+        head = head->next;
+        return_adress = return_adress->next;
+    }
+    
+    return return_adress;
+}
+
+
+struct Node* copyRandomList(struct Node* head) {
+	if(!head)
+        return NULL;
+    
+    struct Node *ans;
+    struct Node *curr;
+    curr = (struct Node*)malloc(sizeof(struct Node));
+    curr->next = NULL;
+    curr->random = NULL;
+    curr->val = 0;
+    
+    curr = createList(head);
+    ans = curr;
+    
+    struct Node *temp;
+    temp = head;
+    while(curr){
+        curr->random = get_index_adress(head, temp->random, ans);
+        temp = temp->next;
+        curr = curr->next; 
+    } 
+    
+    return ans;
+}
+/****網路參考****/
+//Accepted C solution Rt O(n) Sp O(n)
+/** step 1:copy each node and append it to the original one;
+ *  step 2:iterate the new list and fix the random pointers
+ *  step 3:separate the list.
+ */
+
+
+// struct Node *copyRandomList(struct Node *head) {
+// 	if(NULL==head) return head;
+
+// 	struct Node *p=head;
+// 	struct Node *pt;
+
+// 	//copy
+// 	while(NULL!=p){
+// 		pt=p->next;
+// 		p->next=malloc(sizeof(struct Node));
+// 		p->next->val=p->val;
+// 		p->next->next=pt;
+// 		p->next->random=NULL; 
+// 		p=pt;
+// 	}
+
+// 	//fix random pointer
+// 	p=head;
+// 	while(NULL!=p){
+// 		if(NULL!=p->random){
+// 			p->next->random=p->random->next;
+// 		}
+// 		p=p->next->next;
+// 	};
+
+// 	//separate
+// 	struct Node *copyed_head=NULL;
+// 	p=head;
+// 	while(NULL!=p){
+// 		if(NULL!=copyed_head){
+// 			pt->next=p->next;
+// 			pt=pt->next;
+// 		}else{
+// 			copyed_head=p->next;
+// 			pt=copyed_head;
+// 		}
+// 		p->next=p->next->next;
+// 		p=p->next;
+// 	}
+
+// 	return copyed_head;
+// }
