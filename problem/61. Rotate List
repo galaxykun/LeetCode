@@ -1,0 +1,45 @@
+// 先尾巴連頭，計算總長度，總長度減k，就會是回傳的頭，再把頭前面的linked刪掉
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+
+
+struct ListNode* rotateRight(struct ListNode* head, int k){
+    if(!head || head->next == NULL)
+        return head;
+    
+    int length = 0;
+    struct ListNode *curr;
+    curr = head;
+    
+    //計算總長度
+    while(curr){
+        length++;
+        
+        if(!curr->next){
+            curr->next = head;
+            break;
+        }
+      
+        curr = curr->next;
+    }
+   
+    //當k>l時等於繞一圈
+    k = k % length;
+    curr = head;
+    
+    //找頭
+    for(int i = 0; i < length-k-1; i++){
+        curr = curr->next;
+    }
+    
+    //斷頭前的連線
+    head = curr->next;
+    curr->next = NULL;
+    
+    return head;
+}
