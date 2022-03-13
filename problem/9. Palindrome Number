@@ -1,0 +1,29 @@
+//取餘數 除10 跟原本比對
+
+bool isPalindrome(int x){
+    if(x < 0)
+        return false;
+    else if(x < 10)
+        return true;
+        
+    int topic = 0, remainder = 0;
+    long ans = 0;
+    
+    topic = x;
+    
+    while(1){
+        remainder = topic % 10;
+        ans += remainder;
+        topic = topic/10;
+        
+        if(!topic)
+            break;
+        
+        ans = ans * 10;
+    }
+
+    if(ans == x)
+        return true;
+    else
+        return false;
+}
