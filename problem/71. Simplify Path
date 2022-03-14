@@ -1,0 +1,55 @@
+
+char* simplifyPath(char* path) 
+{
+    int top = -1;
+    int i;
+    int j;
+
+    //雙指標
+    for(i = 0; path[i] != '\0'; ++i)
+    {
+        //先複製
+        path[++top] = path[i]; 
+        
+        //判斷'/.'
+        if(top >= 1 && path[top - 1] == '/' && path[top] == '.' && (path[i + 1] == '/' || path[i + 1] == '\0'))
+        {
+            top -= 2;
+        }
+        
+        //判斷'/..'
+        else if(top >= 2 && path[top - 2] == '/' && path[top - 1] == '.' && path[top] == '.' && (path[i + 1] == '/' || path[i + 1] == '\0'))
+        {
+            //把指標往前移到'/'
+            for(j = top - 3; j >= 0; --j)
+            {
+                if(path[j] == '/') break;
+            }
+            if(j < 0)
+            {
+                top = -1;
+            }
+            else
+            {
+                top = j - 1;
+            }
+        }
+        
+        //處裡多個'/'
+        else if(path[top] == '/' && path[i + 1] == '/') --top;
+    }
+    
+    //判斷是否有路徑
+    if(top > 0) 
+    {
+        if(path[top] == '/') path[top] = '\0';
+        else path[top + 1] = '\0';
+    }
+    else if(top == 0) path[top + 1] = '\0';
+    else 
+    {
+        path[0] = '/'; 
+        path[1] = '\0';
+    }
+    return path;
+}
