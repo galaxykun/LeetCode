@@ -1,0 +1,27 @@
+//使用DP 開個表格存每個杯子內有多少，如果大於1則會往下一個row的2個杯子均流
+
+double champagneTower(int poured, int query_row, int query_glass){
+    double table[query_row+2][query_row+2];
+    memset(table,0.0,sizeof(table));
+    
+    table[0][0] = poured;
+    for(int row = 0; row <= query_row; row++){
+        for(int glass = 0; glass <= row; glass++){
+            if(table[row][glass] > 1.0){
+                table[row+1][glass] += (table[row][glass]-1) / 2;
+                table[row+1][glass+1] += (table[row][glass]-1) / 2;
+                table[row][glass] = 1.0;
+            }
+            
+            if(query_row == row && query_glass == glass){
+                if(table[row][glass] == 1.0)
+                    return (double)1;
+                else
+                    return table[row][glass];
+            }
+        }
+    }
+    
+    
+    return;
+}
