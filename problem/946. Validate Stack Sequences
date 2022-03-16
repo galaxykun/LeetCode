@@ -1,0 +1,56 @@
+//看stack如果有不符合popped return false;
+
+bool validateStackSequences(int* pushed, int pushedSize, int* popped, int poppedSize){
+    
+    int stack[pushedSize];
+    int index = 0; //for pushed
+    int curr = 0; //for stack
+    int top = 0; //for poped
+    
+    stack[curr] = pushed[index++];
+    while(top < poppedSize){printf("%d ",curr);
+        if(popped[top] == stack[curr]){
+            top++;
+            if(curr > 0)
+                curr--;
+        }
+        else{
+            if(index >= pushedSize)
+                return false;
+            stack[++curr] = pushed[index++];
+        }
+    }
+    return true;
+}
+
+/****網路參考****/
+// bool validateStackSequences(int* pushed, int pushedSize, int* popped, int poppedSize){
+// 	int i = 0, j = 0, k = 0;
+//     int * arr = (int*) malloc (pushedSize * sizeof(int));
+// 	while (k >= 0 && k < pushedSize && j < poppedSize)
+// 	{
+// 		if (k>0 && arr[k-1] == popped[j]) {
+// 			k--; j++;
+// 		}
+// 		else
+// 		{
+// 			if (i < pushedSize)
+// 			{
+// 				if (pushed[i] == popped[j])
+// 				{
+// 					i++; j++;
+// 				}
+// 				else {
+// 					arr[k++] = pushed[i++];
+// 				}
+// 			}
+// 			else 
+//             {
+//                 free (arr);
+// 				return false;
+//             }
+// 		}
+// 	}
+//     free (arr);
+// 	return true;
+// }
