@@ -1,0 +1,79 @@
+//看到連續左括號就增加一層，計算每層裡有幾個 () * 相對應曾數 就會是答案
+
+int scoreOfParentheses(char * s){
+    int level = 0;
+    int count = 0;
+    
+    for(int i = 0; i < strlen(s); i++){
+        
+        if(s[i] == '(' && s[i+1] == '('){
+            level++;
+        }
+        else if(s[i] == '(' && s[i+1] == ')'){
+            count += 1 << level;
+        }
+        else if(s[i] == ')' && s[i+1] == ')'){
+            level--;
+        }
+    }
+    
+    return count;
+}
+
+// 遞迴
+// int numberofparentheses(int level, int curr, char * s, int *count){
+//     int num = 0;
+//     while(1){
+//         if(s[curr] == '(' && s[curr+1] == ')'){
+//             num++;
+//         }
+//         else if(s[curr] == '(' && s[curr+1] == '('){
+//             curr = numberofparentheses(level+1, curr+1, s, &(*count));
+//         }
+//         else if(s[curr] == ')' && s[curr+1] == ')'){
+//             *count += num * (1 << level);
+//             return curr;
+//         }
+        
+//         curr++;
+//     }
+// }
+
+// int scoreOfParentheses(char * s){
+//     int level = 0;
+//     int count = 0;
+//     int curr = 0;
+//     int ans = 0;
+    
+//     for(int i = 0; i < strlen(s); i++){
+        
+//         if(s[i] == '(' && s[i+1] == '('){
+//             i = numberofparentheses(1, i+1, s, &count); 
+//         }
+//         else if(s[i] == '(' && s[i+1] == ')'){
+//             ans++;
+//         }
+//     }
+    
+//     ans += count;
+    
+//     return ans;
+// }
+
+
+/****網路參考****/
+// int scoreOfParentheses(char * s){
+//     int result = 0, count = 0;
+//     for(int i = 0; i < strlen(s); i++)
+//     {
+//         if(s[i] == '(')
+//             count++;
+//         else
+//         {
+//             count--;
+//             if(s[i - 1] == '(')
+//                 result += 1 << count;
+//         }
+//     }
+//     return result;
+// }
