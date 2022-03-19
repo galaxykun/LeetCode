@@ -1,0 +1,232 @@
+//Time Limit Exceeded
+
+// /**
+//  * Your FreqStack struct will be instantiated and called as such:
+//  * FreqStack* obj = freqStackCreate();
+//  * freqStackPush(obj, val);
+ 
+//  * int param_2 = freqStackPop(obj);
+ 
+//  * freqStackFree(obj);
+// */
+
+
+// typedef struct freqstack{
+//     int val;
+//     //int push_count;
+//     struct freqstack *next;
+//     struct freqstack *past;
+// } FreqStack;
+
+// //int len = 0;
+// int count[20000][2];
+// FreqStack* tail = NULL;
+
+// FreqStack* freqStackCreate() {
+//     FreqStack* obj = (FreqStack*)malloc(sizeof(FreqStack));
+//     obj->val = -1;
+//     //obj->push_count = -1;
+//     obj->next = NULL;
+//     obj->past = NULL;
+    
+//     memset(count, -1, sizeof(count));
+//     //head = obj;
+//     return obj;
+// }
+
+// void freqStackPush(FreqStack* obj, int val) {
+    
+//     while(obj->next)
+//         obj = obj->next;
+        
+// //printf(">%d\n",obj->val);
+//     FreqStack *new = (FreqStack*)malloc(sizeof(FreqStack));
+//     new->val = val;
+//     new->next = NULL;
+//     new->past = obj;
+//     obj->next = new;
+//     //obj = new;
+//     tail = new;
+//     //len++;
+    
+//     for(int i = 0; i < 20000; i++){
+//         if(count[i][0] == -1 || count[i][0] == new->val){
+//             count[i][0] = new->val;
+//             count[i][1]++;
+//             break;
+//         }
+//     }
+    
+//     return;
+// }
+
+// int freqStackPop(FreqStack* obj) {
+//     int max = count[0][1];
+    
+//     for(int i = 0; i < 20000; i++){
+//         if(count[i][0] == -1)
+//             break;
+//         if(count[i][1] > max)
+//             max = count[i][1];
+//     }
+    
+//     FreqStack* curr = tail;
+    
+//     //  for(int i = 0; i < 20000; i++){
+//     //      if(count[i][0] == -1)
+//     //          break;
+//     //      printf("%d ",count[i][1]);
+//     //  }
+//     // printf("\n");
+//     // printf("!%d ",max);
+//     while(curr->val != -1){
+//         int key = 0;
+//         for(int i = 0; i < 20000; i++){
+//             if(count[i][0] == -1)
+//                 break;
+//             if(count[i][1] < max)
+//                 continue;
+            
+//             if(count[i][0] == curr->val){
+//                 count[i][1]--;
+//                 key = 1;
+//                 break;
+//             }
+//         }
+//         if(key)
+//             break;
+        
+//         curr = curr->past;
+//     }
+                                  
+//     if(curr == tail)
+//         tail = tail->past;
+    
+//     //printf(">%d \n",curr->val);
+    
+//     int ans = curr->val;
+//     curr->past->next = curr->next;
+//     if(curr->next)
+//         curr->next->past = curr->past;
+//     curr->next = NULL;
+//     curr->past = NULL;
+    
+//     // free(curr->next);
+//     // free(curr->past);
+//     free(curr);
+    
+    
+    
+// //     int count[len][2];
+// //     memset(count, -1, sizeof(count));
+    
+// //     FreqStack* curr;    
+    
+// //     obj = obj->next;
+// //     while(obj){
+// //         for(int i =0; i < len; i++){
+// //             if(count[i][0] == obj->val || count[i][0] == -1){
+// //                 count[i][0] = obj->val;
+// //                 count[i][1]++;
+                
+// //                 if(count[i][1] >= count[max][1])
+// //                     max = i;
+// //                 break;
+// //             }
+// //         }
+// //         if(obj->next == NULL)
+// //             curr = obj;
+        
+// //         obj = obj->next;
+// //     }
+// //     printf("%d ",count[max][0]);
+    
+// //     while(curr->val != -1){
+// //         if(curr->val == count[max][0])
+// //             break;
+        
+// //         curr = curr->past;
+// //     }
+    
+// //     int ans = curr->val;
+// //     curr->past->next = curr->next;
+// //     if(curr->next)
+// //         curr->next->past = curr->past;
+// //     curr->next = NULL;
+// //     curr->past = NULL;
+    
+// //     // free(curr->next);
+// //     // free(curr->past);
+// //     free(curr);
+// //     len--;
+   
+//     return ans;
+// }
+
+// void freqStackFree(FreqStack* obj) {
+//     //obj = head;
+//     // while(obj){
+//     //     printf("is%d ",len);
+//     //     printf("%d ",obj->val);
+//     //     obj = obj->next;
+//     // }
+//     while(obj){printf("is");
+//         FreqStack *temp = obj->next;
+//         // free(obj->past);
+//         // free(obj->next);
+//         free(obj);
+//         obj = temp;
+//     }
+    
+//     return;
+// }
+
+
+/****網路參考****/
+/*
+Context : Below is a barebone and low-level implementation for this given problem involving mmap(). It does not use any kind of built-in Data Structures such as maps, max-heap, etc. It uses custom data organization in achieving O(1) Push/Pop operations for the most-frequent-stack logic. Instead of using the usual malloc, calloc, and the like to allocate memory, below code uses mmap() system call(which of course would be called by malloc and the like for large allocations) directly since the former ones failed in doing the needed memory allocation for unknown reasons. Before arriving at the below simple solution, I had spent significant time and effort on other approaches similar to my LFU implementation, but due to insufficient memory, I had to redesign the whole thing and come up with below simple one, which I feel is totally worth my time and effort. Cheers.
+
+NOTE: There is absolutely no memory-(re)allocation in the Push/Pop functions. All allocations are done in one-shot using a single mmap() call. Of course, the backing memory regions would be made available on-demand as page-faults occur and new pages for those are allocated which I think is true even for malloc, etc and also the Push/Pop operations for built-in data structures in other languages.
+*/
+// Below are part of sys/mman.h, but for some reason(platform macro disabled?), these
+// don't look like accessible even if that's included. So, defining these myself here
+// based on their original values.
+#define PROT_READ           0x1
+#define PROT_WRITE          0x2
+#define MAP_ANONYMOUS       0x20  
+#define MAP_PRIVATE         0x02
+#define MAP_FAILED          ((void *)-1)
+extern void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);
+
+#define ALL_SZ              10000            
+#define ONEG                (1024 * 1024 * 1024ULL)
+
+typedef struct {
+    uint16_t t[ALL_SZ], m[ONEG], mxf;
+    int fm[ALL_SZ][ALL_SZ];
+} FreqStack;
+
+FreqStack* freqStackCreate() { // Though usual malloc, calloc, would internally call mmap() for
+    // large allocations such as this, for some reason, it didn't or failed in doing so. So, I am
+    // directly using mmap() myself for doing the needed anonymous memory allocation.
+    return mmap(NULL, sizeof(FreqStack), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+}
+
+void freqStackPush(FreqStack* obj, int x) {
+    FreqStack *f = obj;
+    int fq = ++f->m[x];
+    f->fm[fq][++f->t[fq]] = x;
+    f->mxf < f->m[x] ? f->mxf = f->m[x] : 0;
+}
+
+int freqStackPop(FreqStack* obj) {
+    FreqStack *f = obj;
+    int val = f->fm[f->mxf][f->t[f->mxf]--];
+    f->m[val]--;
+    !f->t[f->mxf] ? f->mxf-- : 0;
+    return val;
+}
+
+void freqStackFree(FreqStack* obj) {
+    munmap(obj);
+}
