@@ -1,0 +1,83 @@
+
+
+int romanToInt(char * s){
+    int i = 0, tot = 0;
+    while(s[i]){
+        switch(s[i]){
+                int value = 0;
+                case 'I':
+                    if(s[i+1] == 'V'){
+                        value = 4;
+                        i+=2;
+                    } else if(s[i+1] == 'X'){
+                        value = 9;
+                        i+=2;
+                    } else{
+                        value = 1;
+                        i+=1;
+                    } 
+                    tot+=value;
+                    break;
+                case 'X':
+                    if(s[i+1] == 'L'){
+                        value = 40;
+                        i+=2;
+                    } else if(s[i+1] == 'C'){
+                        value = 90;
+                        i+=2;
+                    } else{
+                        value = 10;
+                        i+=1;
+                    } 
+                    tot+=value;
+                    break;
+                case 'C':
+                    if(s[i+1] == 'D'){
+                        value = 400;
+                        i+=2;
+                    } else if(s[i+1] == 'M'){
+                        value = 900;
+                        i+=2;
+                    } else{
+                        value = 100;
+                        i+=1;
+                    } 
+                    tot+=value;
+                    break;
+                default:
+                    if(s[i] ==  'V'){
+                        value = 5;
+                    } else if(s[i] == 'L'){
+                        value = 50;
+                    } else if(s[i] == 'D'){
+                        value = 500;
+                    } else if(s[i] == 'M'){
+                        value = 1000;
+                    }
+                    tot+=value;
+                    i+=1;  
+        }
+    }
+    return tot;
+}
+
+/****網路參考****/
+// int romanToInt(char* s) {
+//     int value[100];
+//     value['I'] = 1;
+//     value['V'] = 5;
+//     value['X'] = 10;
+//     value['L'] = 50;
+//     value['C'] = 100;
+//     value['D'] = 500;
+//     value['M'] = 1000;
+//     value['\0'] = 0;
+//     int sum = 0;
+//     for(int i = 0; s[i] !='\0'; i++){
+//         if(value[s[i]] < value[s[i + 1]])
+//             sum = sum - value[s[i]];
+//         else
+//             sum += value[s[i]];
+//     }
+//     return sum;
+// }
