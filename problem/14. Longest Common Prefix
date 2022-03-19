@@ -1,0 +1,117 @@
+char * longestCommonPrefix(char ** strs, int strsSize){
+    if(!strsSize)
+        return "";
+    if(strsSize == 1)
+        return strs[0];
+    
+    
+    int curr = 0;
+
+    while(1){
+        for(int i = 0; i < strsSize-1; i++){
+            if(!strs[i][curr]){
+                strs[0][curr] = '\0';
+                return strs[0];
+            }
+            if(strs[i][curr] != strs[i+1][curr]){
+                strs[0][curr] = '\0';
+                return strs[0];
+            }   
+        }
+        curr++;
+    }
+    
+    return strs[0];
+}
+
+
+
+
+/****寫錯，做成找至少2個以上最長的相同字
+// char * longestCommonPrefix(char ** strs, int strsSize){
+//     if(strsSize <= 1)
+//         return strs;
+    
+//     char *result = (char*)calloc(200,sizeof(char));
+//     int count[26];
+//     memset(count,0,sizeof(count));
+//     int curr = 0;
+    
+//     for(int i = 0; i < strsSize; i++){
+//         if(strs[i][curr])
+//             count[strs[i][curr] - 'a']++;
+//     }
+
+//     int max = -1;
+//     for(int i = 0; i < 26; i++){
+//         if(count[i] > 1 && count[i] > max)
+//             max = i;
+//     }
+    
+//     if(max != -1)
+//         result[curr] = max + 'a';
+//     else
+//         return NULL;
+    
+    
+//     memset(count,0,sizeof(count));
+//     curr++;
+//     while(1){
+//         for(int i = 0; i < strsSize; i++){
+//             if(!strs[i][curr])
+//                 return result;
+            
+//             if(strs[i][curr-1] == result[curr-1])
+//                 count[strs[i][curr] - 'a']++;
+//         }
+        
+//         max = -1;
+//         for(int i = 0; i < 26; i++){
+//             if(count[i] > 1 && count[i] > max)
+//                 max = i;
+//         }
+//         memset(count,0,sizeof(count));
+        
+//         if(max != -1)
+//             result[curr] = max + 'a';
+
+//         if(!result[curr])
+//             break;
+        
+//         curr++;
+       
+//     }
+    
+//     return result;
+// }
+
+
+/****66****/
+// char * longestCommonPrefix(char ** strs, int strsSize){
+//     if(strsSize == 1){
+//         return strs[0];
+//     }
+//     for(int i = 0; i < strsSize-1; i++){
+//         int len = 0;
+//         if(strlen(strs[i]) > strlen(strs[i+1])){
+//             len = strlen(strs[i+1]);
+//         } else {
+//             len = strlen(strs[i]);
+//         }
+//         if(len == 0){
+//             strs[i+1][0]='\0';
+//             continue;
+//         }
+//         for(int j = 0; j < len; j++){
+//             if(strs[i+1][j] != strs[i][j]){
+//                 strs[i+1][j] = '\0';
+//                 break;
+//             }
+//         }
+//         if(strstr(strs[i+1],strs[i]) != NULL)
+//             strs[i+1][len] = '\0';
+//     }
+//     return strs[strsSize-1];
+// }
+
+
