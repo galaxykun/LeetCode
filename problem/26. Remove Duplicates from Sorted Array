@@ -1,0 +1,37 @@
+//因為已經排序好了，所以只需要找到跟上一個不一樣的就+1，並按照順序放到相應的位子。
+
+int removeDuplicates(int* nums, int numsSize){
+    if(numsSize <= 1)
+        return numsSize;
+    
+    int ans = 1;
+    int count = 1;
+    int cmp = nums[0];
+    for(int i = 1; i < numsSize; i++){
+        if(nums[i] != cmp){
+            ans++;
+            nums[count++] = nums[i];
+            cmp = nums[i];
+        }       
+    }
+    
+    return ans;
+}
+
+/****網路參考****/
+// int removeDuplicates(int* nums, int numsSize)
+// {
+//     int i, last = 0;
+   
+//     if (numsSize <= 1) {
+//         return numsSize;
+//     }
+     
+//     for (i = 1; i < numsSize; i++) {
+//         if (nums[i-1] < nums[i]) {
+//             nums[++last] = nums[i];
+//         }
+//     }
+
+//     return last+1;
+// }
