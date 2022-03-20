@@ -1,0 +1,28 @@
+
+
+int searchInsert(int* nums, int numsSize, int target){
+    if(target < nums[0])
+        return 0;
+    if(target > nums[numsSize - 1])
+        return numsSize;
+    if(numsSize == 1)
+        return nums[0] > target ? 1 : 0;
+        
+    int right = numsSize-1, left = 0;
+    while(right >= left){printf("%d %d\n",left,right);
+        if(nums[(right + left) / 2] == target)
+            return (right + left) / 2;
+        
+        else if(nums[(right + left) / 2] > target)
+            right = ((right + left) / 2) - 1;
+        
+        else
+            left = ((right + left) / 2) + 1;
+    }
+    
+    // if(right == left && nums[right] >= target)
+    //         return right;
+
+    return left;
+}
+
