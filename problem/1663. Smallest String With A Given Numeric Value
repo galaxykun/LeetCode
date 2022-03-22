@@ -1,0 +1,41 @@
+
+
+char * getSmallestString(int n, int k){
+
+    char *result = calloc(n+1,sizeof(char*));
+    
+    while(n){
+        if(k-(n-1) >= 26){
+            result[n-1] = 'z';
+            k = k-26;
+        }
+        else{
+            result[n-1] = k-(n-1)-1 + 'a';
+            k = k-(k-(n-1));
+        }
+        n--;
+        
+        if(n == k){
+            for(int i=0;i<n;i++)
+                result[i]='a';
+            break;
+        }
+        
+    }
+    return result;
+}
+
+/****網路參考****/
+// #define min(A, B) (A < B ? A : B)
+// char *getSmallestString(int n, int k) {
+//   char *array = malloc(sizeof(char) * (n + 1));
+//   array[n] = '\0';
+//   memset(array, 'a', n);
+
+//   k -= n;
+//   while (k > 0) {
+//     array[--n] += min(25, k);
+//     k -= min(25, k);
+//   }
+//   return array;
+// }
