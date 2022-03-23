@@ -1,0 +1,50 @@
+
+
+int brokenCalc(int startValue, int target){
+    if(startValue == target)
+        return 0;
+    
+    if(target < startValue)
+        return startValue - target;
+        
+    int ans = 0;
+    while(1){
+        if(target/2 > startValue){
+            ans++;
+            if(target%2){
+                ans++;
+                target++;
+            }
+            target = target/2;
+            continue;
+        }
+        
+        if((target%2)){
+            if(startValue > (target/2))
+                return ans + (startValue - (target/2) - 1) + 2;
+            else
+                return ans + ((target/2) - startValue + 1) + 2;
+        }
+        else{
+            if(startValue > (target/2))
+                return ans + (startValue - (target/2)) + 1;
+            else
+                return ans + ((target/2) - startValue) + 1;
+        }
+    }
+        
+}
+
+/****網路參考****/
+// int brokenCalc(int startValue, int target){
+//     int result = 0;
+//     while(target > startValue) 
+//     {
+//         result++;
+//         if (target & 1 == 1)
+//             target++;
+//         else
+//             target >>= 1;
+//     }
+//     return result + startValue - target;
+// }
