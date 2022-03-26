@@ -1,0 +1,77 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+int count = 0;
+
+void search(int result[], struct TreeNode* curr){ 
+    
+    if(curr->left){
+        search(result, curr->left);
+    }
+    
+    result[count++] = curr->val;
+    
+    if(curr->right){
+        search(result, curr->right);
+    }
+
+    return;
+}
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* inorderTraversal(struct TreeNode* root, int* returnSize){
+                                                              
+    int *result = calloc(101, sizeof(int));
+                                                              
+    if(!root){
+        *returnSize = 0;
+        return;
+    }
+        
+    
+    if(!(root->left) && !(root->right)){
+        result[0] = root->val;
+        *returnSize = 1;
+        return result;
+    }
+                                         
+    if(root->left){
+        search(result, root->left);
+    }
+                                                              
+    result[count++] = root->val;
+    
+    if(root->right){
+        search(result, root->right);
+    }
+                                                              
+    *returnSize = count;
+    count = 0;
+    
+    
+    return result;
+}
+
+/****other people's do****/
+// void travel(struct TreeNode* root,int*ret,int*size){
+//     if(root==NULL)
+//         return 0 ;
+//     travel(root->left,ret,size);
+//     ret[(*size)++]=root->val;
+//     travel(root->right,ret,size);
+// }
+
+// int* inorderTraversal(struct TreeNode* root, int* returnSize){
+//     *returnSize=0;
+//     int *ret=malloc(sizeof(int)*100);
+//     travel(root,ret,returnSize);
+//         return ret;
+
+// }
