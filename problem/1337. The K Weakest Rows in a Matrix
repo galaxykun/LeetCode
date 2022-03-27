@@ -1,0 +1,69 @@
+
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int cmp(const int* a, const int* b){
+    return *(int*)a - *(int*)b;
+}
+
+
+
+int* kWeakestRows(int** mat, int matSize, int* matColSize, int k, int* returnSize){
+
+    int count[matSize][2];
+    
+    for(int i = 0; i < matSize; i++){
+        int temp = 0;
+        for(int j = 0; j < *matColSize; j++){
+            if(mat[i][j])
+                temp++;
+        }
+        count[i][0] = temp;
+        count[i][1] = i;
+    }
+    
+    qsort(count, matSize, sizeof(count[0]), cmp);
+    
+    int *result = calloc(k,sizeof(int*));
+    *returnSize = k;
+    for(int i = 0; i < k; i++)
+        result[i] = count[i][1];
+    
+    
+    return result;                                 
+}
+
+// struct info{
+//     int val;
+//     int index;
+// };
+
+// int compare(const void*a, const void*b){
+//     struct info a_ = *(struct info*)a;
+//     struct info b_ = *(struct info*)b;
+    
+//     return a_.val - b_.val;
+    
+// }
+// int* kWeakestRows(int** mat, int matSize, int* matColSize, int k, int* returnSize){
+//     int *ans = (int*)malloc(sizeof(int)*k);
+//     struct info arr[matSize];
+//     *returnSize = k;
+//     int j;
+    
+//     for(int i=0;i<matSize;i++){
+//         j=0;
+//         while( j<*matColSize && mat[i][j]!=0) j++;        
+//         arr[i].val = j;
+//         arr[i].index = i;        
+//     }
+	
+//     qsort(arr, matSize, sizeof(arr[0]), compare);
+    
+//     for(int i=0;i<k;i++){        
+//         ans[i] = arr[i].index;
+//     }    
+	
+//     return ans;
+// }
