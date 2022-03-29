@@ -1,0 +1,97 @@
+
+
+// char * longestPalindrome(char * s){
+//     int len = strlen(s);
+//     int last[122-48+1] = {0};
+    
+//     for(int i = 0; i < len; i++){
+//         last[s[i] - '0'] = i;    
+//     }
+    
+//     int left = 0, right = len - 1;
+//     int index = 0, max = 0, count = 0, start = 0;
+//     for(int i = 0; i < len; i++){
+//         if(max > len/2 || max == len)
+//             break;
+        
+//         if(last[s[i] - '0'] != i){
+//                 index = last[s[i] - '0'];
+//                 left = i;
+//                 right = last[s[i] - '0'];
+            
+//                 while(left < index--){
+//                     if(max > len/2 || max == len)
+//                         break;
+//                     if(s[index] != s[left])
+//                         continue;
+//                     while(s[left] == s[right]){
+//                         if(left == right){
+//                             count++;
+//                             if(count > max){
+//                                 max = count;
+//                                 start = i;
+//                             }
+//                             break;
+//                         }
+//                         if(right - left == 1){
+//                             count += 2;
+//                             if(count > max){
+//                                 max = count;
+//                                 start = i;
+//                             }
+//                             break;
+//                         }
+
+//                         count += 2;
+//                         left++;
+//                         right--;
+//                     }
+//                     count = 0;
+//                     right = index;
+//                     left = i;  
+//                 }
+//             }
+//     }
+//     //printf("\n");printf("<%d %d>",left,right);
+//     char *result = calloc(max+1,sizeof(char));
+//     if(!max)
+//         result[0] = s[0];
+//     // for(int i = start, j = 0; j < max; j++, i++){
+//     //     result[j] = s[i];
+//     // }
+//     strncpy(result, s + start, max);
+    
+//     printf("%s\n",result);
+    
+//     return result; 
+// }
+
+/****other people's do****/
+//從中間往兩邊找，連續重複的地方一定會是回文，並且跳過連續重複的地方，如果那段連續重複的地方最長就記錄下來
+char* longestPalindrome(char* s) {
+    char *start, *end;
+    char *p = s, *subStart = s;
+    int maxLen = 1;
+    while(*p){
+        start = p; end = p;
+        
+        while(*(end+1) && *(end+1) == *end){
+            end++; // skip duplicates
+        }
+        p = end + 1;
+        
+        while(*(end + 1) && (start > s) && *(end + 1) == *(start - 1)){
+            
+            start--;
+            end++;
+        }
+        if(end - start + 1 > maxLen){
+            maxLen = end - start + 1;
+            subStart = start;
+        }
+    }
+    
+    char *rst = (char *) calloc(maxLen + 1, sizeof(char));
+    strncpy(rst, subStart, maxLen);
+    return rst;
+}
