@@ -1,0 +1,112 @@
+
+
+// int findDuplicate(int* nums, int numsSize){
+//     int *count = calloc(100000, sizeof(int*));
+    
+//     for(int i = 0; i < numsSize; i++){
+//         if(count[nums[i]]){
+//             free(count);
+//             return nums[i];
+//         }
+//         count[nums[i]]++;
+//     }
+//     free(count);
+    
+    
+//     return;
+// }
+
+/****other people's do****/
+//slow and fast Linked list cycle
+// int findDuplicate(int* nums, int numsSize){
+//     int slow = nums[0];
+//     int fast = nums[0];
+//     do{
+//         slow = nums[slow];
+//         fast = nums[nums[fast]];
+//     }
+//     while(slow != fast);
+//     slow = nums[0];
+//     while(slow != fast){
+//         slow = nums[slow];
+//         fast = nums[fast];
+//     }
+
+//     return fast;
+// }
+
+int findDuplicate(int* nums, int numsSize){
+    int slow=nums[0];
+    int fast=nums[nums[0]];
+    
+    while(slow!=fast){
+        slow=nums[slow];
+        fast=nums[nums[fast]];
+    }
+    
+    slow=0;
+    
+    while(slow!=fast){
+        slow=nums[slow];
+        fast=nums[fast];
+    }
+    
+    
+    return slow;
+}
+
+//binary search O(nlogn)
+// int findDuplicate(int* nums, int numsSize){
+//     int low = 1;
+//     int high = numsSize - 1;
+
+//     while (low < high){
+//         int mid = (low + high) / 2;
+//         int count = 0;
+
+//         for (int i = 0; i < numsSize; ++i){
+//             if (nums[i] <= mid){
+//                 ++count;
+//             }
+//         }
+
+//         if (count > mid){  // 陣列中小於mid的值的數量較多，故答案的範圍在low~mid
+        
+//             high = mid;
+//         }
+//         else{
+//             low = mid + 1;
+//         }
+//     }
+
+    
+//     return low;
+// }
+
+//二進制
+// int findDuplicate(int* nums, int numsSize){
+//     int res = 0;
+//     //2^17(1 << 17) = 131,072 and n <= 10^5 = 100,000
+//     for(int i = 0; i < 18; i++){
+//         int a = 0;
+//         int b = 0;
+//         int mask = (1 << i);
+//         for (int j = 0; j < numsSize; j++){
+//             //统计原数组当前列 1 的个数
+//             if ((nums[j] & mask) > 0) {
+//                 a++;
+//             }
+//             //统计 1 到 n 序列中当前列 1 的个数
+//             if ((j & mask) > 0) {
+//                 b++;
+//             }
+//         }
+        
+//         if (a > b) {
+//             res = res | mask;
+//         }
+//     }
+    
+//     return res;
+// }
+
