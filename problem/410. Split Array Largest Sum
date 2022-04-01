@@ -1,0 +1,146 @@
+
+// int part_add(int* nums, int place, int len){
+//     int result = 0;
+//     for(int i = 0; i < len; i++){
+//         result += nums[i + place];
+//     }
+    
+//     return result;
+// }
+
+
+
+// int splitArray(int* nums, int numsSize, int m){
+//     if(m == 1){
+//         int ans = 0;
+//         for(int i = 0; i < numsSize; i++)
+//             ans += nums[i];
+//         return ans;
+//     }
+        
+    
+//     int max = 0, min = -1;
+//     int knife[m-1];
+//     for(int i = 0; i < m-1; i++){
+//        knife[i] = i; 
+//     }
+    
+//     for(int i = m-2; i >= 0; i--){
+        
+//         //推刀
+//         while(1){printf("%2d ",knife[i]);       
+//             int count = 0;
+//             for(int j = 0, k = 0; j < numsSize; j++){
+//                 count += nums[j];
+//                 if(k <= m-2 && j == knife[k]){printf(">is %2d ",count);
+//                     if(count > max){
+//                         max = count;
+//                     }
+//                     k++;
+//                     count = 0;
+//                 }
+//                 else if(j == numsSize-1){printf(">>is %2d ",count);
+//                     if(count > max){
+//                         max = count;
+//                     }
+//                     count = 0;
+//                 }
+//             }
+//                  printf("%d ",max);
+//                  printf("\n");
+            
+//             if(min == -1 || min > max)
+//                 min = max;
+//             max = 0;
+            
+//             //前一把刀要推
+//             int temp = knife[i-1];
+//             count = 0;
+//             while(i != 0){
+//                 for(int j = 0, k = 0; j < numsSize; j++){
+//                     count += nums[j];
+//                     if(k <= m-2 && j == knife[k]){printf(">is %2d ",count);
+//                         if(count > max){
+//                             max = count;
+//                         }
+//                         k++;
+//                         count = 0;
+//                     }
+//                     else if(j == numsSize-1){printf(">>is %2d ",count);
+//                         if(count > max){
+//                             max = count;
+//                         }
+//                         count = 0;
+//                     }
+//                 }
+//                 if(min == -1 || min > max)
+//                     min = max;
+//                 max = 0;
+                
+//                 if(knife[i-1]+1 >= knife[i])
+//                     break;
+//                 knife[i-1]++
+//             }     
+//             knife[i-1] = temp;
+            
+//             if(i == m-2){
+//                 if(knife[i] >= numsSize-2)
+//                     break;
+//             }
+//             else{
+//                 if(knife[i] >= knife[i+1]-1)
+//                     break;
+//             }
+//             knife[i]++;
+//         }
+        
+//     }
+//     printf("\n>>%d ",min);
+//     printf("\n------\n");
+//     for(int i = 0; i < m-1; i++){
+//        printf("%d ",knife[i]); 
+//     }
+//     printf("\n------");
+    
+//     return min;
+// }
+
+/****other people's do****/
+//找出nums的總和跟單一最大值，這分別會是答案的左右值(當只分成一組與每個都各為一組的時候)
+//那我們所需要的答案就會在這段值中間，接下來用binary Search來查尋當每組總和<=mid時
+//需要分成幾組，假設分出來的的組數大於m，代表說總和值(mid)太小了
+//相反組數<m時就代表，代表說每組能裝的單一值太多，導致組數不夠
+//最後==時找到了一個分組組合是我們要的，但有其他組合並且依題目所示要往小的找
+//所以在<m要改成<=m那最後找到的那組將會是答案
+int binarySearch(int* nums, int numsSize, int m, int mid) {
+    int count = 0, tmpSum = 0;
+    for (int i = 0; i < numsSize; i++) {
+        tmpSum += *(nums + i);
+
+        if (tmpSum > mid) {
+            count++;
+            tmpSum = *(nums + i);
+        }
+    }
+    return ++count;
+}
+
+int splitArray(int* nums, int numsSize, int m){
+    int left = 0, mid = 0, right = 0, ans = -1;
+
+    for (int i = 0; i < numsSize; i++) {
+        left = left > *(nums + i) ? left : *(nums + i);
+        right += *(nums + i);
+    }
+
+    while (right >= left) {
+        mid = (left + right) / 2;
+        if (m >= binarySearch(nums, numsSize, m, mid)) {
+            ans = mid;
+            right = mid - 1;
+        }
+        else
+            left = mid + 1;
+    }
+    return ans;
+}
