@@ -1,0 +1,67 @@
+// /**
+//  * Definition for singly-linked list.
+//  * struct ListNode {
+//  *     int val;
+//  *     struct ListNode *next;
+//  * };
+//  */
+
+//計算完總長度後，分別算出要在哪兩的點停下來，然後走到那2個點後，swap
+
+int list_len(struct ListNode* curr){
+    int count = 0;
+    
+    while(curr){
+        count++;
+        curr = curr->next;
+    }
+    
+    return count;
+}
+
+
+struct ListNode* swapNodes(struct ListNode* head, int k){
+    int len = list_len(head);
+    int index = len - k + 1;
+    struct ListNode *target1 = head, *target2 = head, *curr = head;
+    
+
+    for( ; k > 0 || index > 0; k--, index--){
+        if(k == 1){
+            target1 = curr;
+        }
+        if(index == 1){
+            target2 = curr;
+        }
+        
+        curr = curr->next;
+    }
+    
+    int swap = target1->val;   
+    target1->val = target2->val;
+    target2->val = swap;
+    
+    return head;
+}
+
+/****other people's do****/
+//走了k個點後，第二個再出發，當走到尾部時，就會是剛好要交換的位置了
+
+
+// struct ListNode* swapNodes(struct ListNode* head, int k){
+//     struct ListNode* curr = head;
+//     struct ListNode* p1 = head;
+//     struct ListNode* p2 = NULL;
+//     int count = 0;
+//     while(curr){
+//         count += 1;
+//         if(count == k) p2 = head;
+//         else if(count < k) p1 = p1->next;
+//         else if(count > k) p2 = p2->next;
+//         curr = curr->next;
+//     }
+//     int tmp = p1->val;
+//     p1->val = p2->val;
+//     p2->val = tmp;
+//     return head;
+// }
