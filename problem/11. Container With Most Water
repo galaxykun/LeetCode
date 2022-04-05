@@ -1,0 +1,77 @@
+
+//DP
+// int maxArea(int* height, int heightSize){
+//     int max = 0;
+    
+//     for(int i = 0; i < heightSize; i++){
+//         for(int j = 0; j < heightSize; j++){
+//             if((j - i) < 0){
+//                 continue;
+//             }
+                
+            
+//             int len = 0, width = j - i;
+//             if(height[i] < height[j])
+//                 len = height[i];
+//             else
+//                 len = height[j];
+            
+//             if(max < len * width)
+//                 max = len * width;
+//         }
+//     }
+    
+    
+//     return max;
+// }
+int maxArea(int* height, int heightSize){
+    int max = 0;
+    
+    for(int i = 0; i < heightSize; i++){
+        for(int j = 0, k = heightSize - 1; j < i || k > i; j++, k--){
+            if(height[j] >= height[i] && j != i){
+                int temp = height[i] * (i - j);
+                if(temp > max)
+                    max = temp;
+                j = i;
+            }
+            if(height[k] >= height[i] && k != i){
+                int temp = height[i] * (k - i);
+                if(temp > max)
+                    max = temp;
+                k = i;
+            }
+        }
+    }
+    
+    return max;
+}
+
+/****other people's do****/
+// int maxArea(int* heights, int size)
+// {
+//     int l=0, r=size-1;
+//     int max = 0;
+//     while(l < r)
+//     {
+//         int area = (r-l)*(heights[l] < heights[r] ? heights[l++] : heights[r--]);
+//         max = max > area ? max : area;
+//     }
+//     //rewrite
+// //     while(l < r)
+// //     {
+// //         int area = 0;
+// //         if(heights[l] == heights[r]){
+// //             area = (r-l)*heights[l++];
+// //             r--;
+// //         }
+// //         else
+// //             area = (r-l)*(heights[l] < heights[r] ? heights[l++] : heights[r--]);
+        
+// //         max = max > area ? max : area;
+// //     }
+//     return max;
+// }
+
+// idea
+//https://leetcode.com/problems/container-with-most-water/discuss/1915172/JavaC%2B%2B-Easiest-Explanations
