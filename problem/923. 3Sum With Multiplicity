@@ -1,0 +1,46 @@
+//先把每個數字出現過幾次記錄下來，3個指標去看 如果target = 8，那從0開始i = 0，那去看j從 j = i
+//開始，k就會是剩下的數字也就是8(8-0-0)去看0跟8的數字量夠不夠，如果不夠或是有一個根本沒有就不會
+//影響答案，然後把所有可能看完就會知道有幾組，也就跟exaple1一樣會找到4種可能，那再去分別看
+//a == b == c，a == b || b == c，a != b != c這3種可能，
+//再用組合P幾取幾的公式去計算就會知道最後答案，至於a == c不會成立因為是從小看到大，
+//並且j < k所以不會有單獨a == c的可能性。
+
+//O(101*101)(因題目限制arr[i] <= 100，速度跟隨題目所設限制)
+int threeSumMulti(int* arr, int arrSize, int target){
+    long count[101] = {0};
+    long result = 0;
+    
+    for(int i = 0; i < arrSize; i++){
+        count[arr[i]]++;
+    }
+    
+    for(int i = 0; i < 101; i++){
+        if(!count[i])
+            continue;
+        
+        for(int j = i, k = target - i - j; j <= k; j++, k = target - i - j){
+            if(k > 100 || !count[k] || !count[j])
+                continue;
+
+            if(i == j && j == k){
+                result += count[i] * (count[j] - 1) * (count[k] - 2) / 6;
+            }
+            else if(i == j || j == k){
+                result += count[i] * (count[j] - 1) * count[k] / 2;
+            }
+            else{
+                result += count[i] * count[j] * count[k];
+            }
+            
+            result = result % 1000000007;
+        }
+    }
+    
+    
+    return result;
+}
+
+/****other people's do****/
+//https://leetcode.com/problems/3sum-with-multiplicity/discuss/1918718/Python-3Sum-Approach-with-Explanation
+//https://leetcode.com/problems/3sum-with-multiplicity/discuss/1918583/Very-Easy-to-Understand-with-ExplanationJavaCC%2B%2BPython
+//https://leetcode.com/problems/3sum-with-multiplicity/discuss/181131/C%2B%2BJavaPython-O(N-%2B-101-*-101)
