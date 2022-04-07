@@ -1,0 +1,63 @@
+
+//worst O(n*n), n = 30.
+int lastStoneWeight(int* stones, int stonesSize){
+    int max_x = -1, max_y = -1, remain = 0, result = 0;
+    
+    while(1){
+        for(int i = 0; i < stonesSize; i++){
+            if(!stones[i])
+                continue;
+
+            remain++;
+            result = stones[i];
+            
+            if( max_y == -1 || stones[i] >= stones[max_y]){
+                max_x = max_y;
+                max_y = i;
+            }
+            else if(max_x == -1 || stones[i] > stones[max_x]){
+                max_x = i;
+            }
+        }
+        if(remain == 1)
+            break;
+        if(!remain){
+            result = 0;
+            break;
+        }
+        
+        if(max_y == max_x){
+            stones[max_y] = 0;
+            stones[max_x] = 0;
+        }
+        else{
+            stones[max_y] = stones[max_y] - stones[max_x];
+            stones[max_x] = 0;
+        }
+        
+        remain = 0;
+        max_y = -1;
+        max_x = -1;
+    }
+    
+    
+    return result;
+}
+
+/****other people's do****/
+//qsort O(nlong)， O(n*nlogn) n = 30.
+// int compare(void *a, void *b) {
+//     return (*(int*)a - *(int*)b);
+// }
+
+// int lastStoneWeight(int* stones, int stonesSize){
+    
+//     int i;
+    
+//     for (i = stonesSize - 1; i > 0; i--) {
+//         qsort(stones, i+1, sizeof(int), compare);
+//         stones[i-1] = stones[i] - stones[i-1];
+//     }
+
+//     return stones[0];  
+// }
