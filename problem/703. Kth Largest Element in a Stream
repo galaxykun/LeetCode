@@ -1,0 +1,186 @@
+
+
+
+typedef struct KthLargest{
+    int val;
+    struct KthLargest* next;   
+} KthLargest;
+
+int cmp(const int *a, int *b){
+    return *(int*)a - *(int*)b;
+}
+
+
+KthLargest* kthLargestCreate(int k, int* nums, int numsSize) {
+
+    qsort(nums, numsSize, sizeof(int), cmp);
+    
+    //list k
+    KthLargest* head = malloc(sizeof(KthLargest));
+    KthLargest* curr = head;
+    curr->val = -100000;
+    curr->next = NULL;
+    
+    if(!numsSize){
+        return head;
+    }
+    
+    for(int i = 1, j = numsSize - k; i < k; i++, j++){
+        if(j >= 0)
+            curr->val = nums[j];
+        
+        KthLargest* temp = malloc(sizeof(KthLargest));
+        temp->val = -100000;
+        temp->next = NULL;
+        curr->next = temp;
+        curr = curr->next;
+    }
+    curr->val = nums[numsSize - 1];
+
+    
+    return head;
+}
+
+int kthLargestAdd(KthLargest* obj, int val) {
+    KthLargest* head = obj;
+    
+    while(obj){
+        if(!(obj->next)){
+            if(val > obj->val)
+                obj->val = val;
+            break;
+        }
+        else if(val < obj->val){
+            break;
+        }
+        else if(val > (obj->next->val)){
+            obj->val = obj->next->val;
+            obj = obj->next;
+        }
+        else if(val >= obj->val){
+            obj->val = val;
+            break;
+        }
+        
+    }
+
+
+    return head->val;
+}
+
+void kthLargestFree(KthLargest* obj) {
+    while(obj){
+        KthLargest* temp = obj->next;
+        obj->next = NULL;
+        free(obj->next);
+        free(obj);
+        obj = temp;
+    }
+    
+    
+    return;
+}
+
+/**
+ * Your KthLargest struct will be instantiated and called as such:
+ * KthLargest* obj = kthLargestCreate(k, nums, numsSize);
+ * int param_1 = kthLargestAdd(obj, val);
+ 
+ * kthLargestFree(obj);
+*/
+
+
+/****other people's do****/
+//This solution follows the ideas stated by skazantsev in the top comment, "Explanation of MinHeap solution".
+//minheap binary_heap(二分堆)
+
+
+// typedef struct {
+//     int* arr;
+//     int length;
+//     int heapsize;
+// } KthLargest;
+
+// void kthLargest_sift(KthLargest* k) {
+//     int* arr = k->arr;
+    
+//     int pos = 0;
+//     while(pos < k->length) {
+//         int smallest = pos;
+//         int left = pos * 2 + 1;
+//         if(left < k->length && arr[smallest] > arr[left])
+//             smallest = left;
+//         int right = left + 1;
+//         if(right < k->length && arr[smallest] > arr[right])
+//             smallest = right;
+        
+//         if(smallest != pos) {
+//             int tmp = arr[pos];
+//             arr[pos] = arr[smallest];
+//             arr[smallest] = tmp;
+//             pos = smallest;
+//         } else
+//             break;
+//     }
+// }
+
+// void kthLargest_insert(KthLargest* k, int val) {
+//     int* arr = k->arr;
+    
+//     // regular heap insert
+//     // haven't inserted k elements into heap yet
+//     if(k->heapsize < k->length) {
+//         int pos = k->heapsize++;
+//         int parent = (pos - 1) / 2;
+
+//         while(pos > 0 && val < arr[parent]) {
+//             arr[pos] = arr[parent];
+//             pos = parent;
+//             parent = (pos - 1) / 2;
+//         }
+//         arr[pos] = val;
+//         return;
+//     }
+    
+//     // k elements in heap
+//     // but val is smaller than k elements, so discard it
+//     if(arr[0] >= val) {
+//         return;
+//     }
+    
+//     // replace smallest value with val, and maintain heap properties
+//     arr[0] = val;
+//     kthLargest_sift(k);
+// }
+
+// // descending order comparison
+// int compare(const void* v1, const void* v2) {
+//     return *(int*)v2 - *(int*)v1;
+// }
+
+// KthLargest* kthLargestCreate(int k, int* nums, int numsSize) {
+    
+//     KthLargest* kl = malloc(sizeof(KthLargest));
+//     kl->arr = calloc(k, sizeof(int));
+//     kl->length = k;
+//     kl->heapsize = 0;
+    
+//     // sort array in descending order
+//     qsort(nums, numsSize, sizeof(int), compare);
+//     // keep a min heap of the k max elements, or numsSize if numsSize < k
+//     for(int i = 0; i < numsSize && i < k; i++)
+//         kthLargest_insert(kl, nums[i]);
+    
+//     return kl;
+// }
+
+// int kthLargestAdd(KthLargest* obj, int val) {
+//     // if val is greater than the root of the heap. replace the root with this value and sift down
+//     kthLargest_insert(obj, val);
+//     return obj->arr[0];
+// }
+
+// void kthLargestFree(KthLargest* obj) {
+//     free(obj->arr);
+//     free(obj);
+// }
