@@ -1,0 +1,27 @@
+
+
+int calPoints(char ** ops, int opsSize){
+    int record[1000] = {0}, curr = 0, sum = 0;
+    
+    for(int i = 0; i < opsSize; i++, curr++){
+        if(*(ops[i]) == 'C'){
+            sum -= record[--curr];
+            record[curr--] = 0;
+        }
+        else if(*(ops[i]) == 'D'){
+            record[curr] = record[curr - 1] * 2;
+            sum += record[curr];
+        }
+        else if(*(ops[i]) == '+'){
+            record[curr] = record[curr - 1] + record[curr - 2];
+            sum += record[curr];
+        }
+        else{
+            record[curr] = atoi(ops[i]);
+            sum += record[curr];
+        }  
+    }
+    
+    
+    return sum;
+}
