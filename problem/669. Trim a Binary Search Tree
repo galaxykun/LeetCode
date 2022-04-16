@@ -1,0 +1,115 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+
+void freeBST(struct TreeNode* curr){
+    if(!curr)
+        return;
+    
+    struct TreeNode* left;
+    struct TreeNode* right;
+    
+    left = curr->left;
+    right = curr->right;
+    free(curr);
+    curr = NULL;
+    freeBST(left);
+    left = NULL;
+    freeBST(right);
+    right = NULL;
+    
+    return;
+}
+
+
+struct TreeNode* trimBST(struct TreeNode* root, int low, int high){
+    if(!root)
+        return root;
+
+    if(root->val < low){
+        struct TreeNode* temp = root;
+        root = root->right;
+        temp->right = NULL;
+        freeBST(temp);
+        return trimBST(root, low, high);
+    }
+    else if(root->val > high){
+        struct TreeNode* temp = root;
+        root = root->left;
+        temp->left = NULL;
+        freeBST(temp);
+        return trimBST(root, low, high);
+    }
+    else{
+        
+        if(root->left && root->left->val < low){
+            struct TreeNode* temp = root->left;
+            struct TreeNode* curr = temp;
+            while(curr->right && curr->right->val < low){
+                curr = curr->right;
+            }
+            root->left = curr->right;
+            curr->right = NULL;
+
+            freeBST(temp);
+        }
+        if(root->right && root->right->val > high){
+            struct TreeNode* temp = root->right;
+            struct TreeNode* curr = temp;
+            while(curr->left && curr->left->val > high){
+                curr = curr->left;
+            }
+            root->right = curr->left;
+            curr->left = NULL;
+
+            freeBST(temp);
+        }
+        
+        trimBST(root->left, low, high);
+        trimBST(root->right, low, high);
+    }
+    
+    
+    return root;  
+}
+
+/****other's people do****/
+// struct TreeNode* trimBST(struct TreeNode* root, int L, int R) {
+//     if (!root)
+//         return NULL;
+//     if(root->val<L)
+//         return trimBST(root->right,L,R);
+//     if(root->val>R)
+//         return trimBST(root->left,L,R);
+//     root->left  = trimBST(root->left,L,R);
+//     root->right = trimBST(root->right,L,R);;
+//     return root;
+// }
+
+/*************/
+// struct TreeNode* trimBST(struct TreeNode* root, int L, int R) {
+//     if(root==NULL)return NULL;
+//     while(root->val<L||root->val>R){
+//         if(root->val<L){
+//             if(root->right==NULL){
+//                 return NULL;
+//             }
+//             root=root->right;
+//         }
+//         if(root->val>R){
+//             if(root->left==NULL){
+//                 return NULL;
+//             }
+//             root=root->left;
+//         }
+//     }
+//     root->left = trimBST(root->left,L,R);
+//     root->right = trimBST(root->right,L,R);
+//     return root;
+// }
