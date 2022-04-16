@@ -1,0 +1,25 @@
+int hammingWeight(uint32_t n) {
+    int count = 0;
+    
+    for(int i = 0; i < 33; i++){
+        if(n & 1)
+            count++;
+        
+        n >>= 1;
+    }
+    
+    return count;
+}
+
+/****other people's do****/
+int hammingWeight(uint32_t n) {
+    return __builtin_popcount(n);
+}
+
+/*************/
+int hammingWeight(uint32_t n) {
+  int b;
+  for (b = 0; n != 0; ++b, n &= n - 1)
+    ;
+  return b;
+}
