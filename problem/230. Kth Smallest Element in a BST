@@ -1,0 +1,41 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+void find(struct TreeNode* root, int k[]){
+    if(!root)
+        return;
+    
+    find(root->left, k);
+    
+    if(!k[0])
+        return;
+    
+    if(!(--k[0])){
+        k[1] = root->val;
+        return;
+    }
+    
+    find(root->right, k);
+    
+    
+    return;
+}
+
+int kthSmallest(struct TreeNode* root, int k){
+    if(!root)
+        return -1;
+    
+    int index[2];
+    index[0] = k;
+    index[1] = -1;
+    
+    find(root, index);
+
+    
+    return index[1];
+}
