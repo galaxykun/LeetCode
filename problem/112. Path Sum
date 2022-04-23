@@ -1,0 +1,88 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+
+bool hasPathSum(struct TreeNode* root, int targetSum){
+    if(!root)
+        return false;
+    
+    bool result = true;
+    
+    if(!root->left && !root->right){
+        if(!(targetSum - root->val))
+            return result;
+    }
+    else{
+        result = hasPathSum(root->left, targetSum - root->val);
+        if(result)
+            return result;
+        
+        result = hasPathSum(root->right, targetSum - root->val);
+        if(result)
+            return result;
+    }
+    
+    
+    return false;
+}
+
+// bool hasPathSum(struct TreeNode* root, int targetSum){
+//     if(!root)
+//         return false;
+    
+//     bool result = true;
+    
+//     if(!(targetSum - root->val)){
+//         return result;
+//     }
+//     else{
+//         result = hasPathSum(root->left, targetSum - root->val);
+//         if(result)
+//             return result;
+        
+//         result = hasPathSum(root->right, targetSum - root->val);
+//         if(result)
+//             return result;
+//     }
+    
+    
+//     return false;
+// }
+
+/****other people's do****/
+// bool hasPathSum(struct TreeNode* root, int sum) {
+//     if (!root) {
+//         return false;
+//     }
+//     int newSum = sum - root->val;
+//     if (root->right && root->left) {
+//         return hasPathSum(root->left, newSum)||hasPathSum(root->right, newSum);
+//     }
+//     if (!root->right && !root->left) {
+//         return (newSum == 0);
+//     }
+//     if (!root->right) {
+//         return hasPathSum(root->left, newSum);
+//     }
+//     else {
+//         return hasPathSum(root->right, newSum);
+//     }
+// }
+
+/*************/
+// bool hasPathSum(struct TreeNode* root, int sum) {
+//     if (!root)
+//         return false;
+    
+//     if (!root->right && !root->left)
+//         return sum == root->val;
+    
+    
+//     return hasPathSum(root->left, sum-root->val) || hasPathSum(root->right, sum-root->val);
+// }
