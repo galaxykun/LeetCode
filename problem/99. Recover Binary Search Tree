@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+
+//refer to https://leetcode.com/problems/recover-binary-search-tree/discuss/32535/No-Fancy-Algorithm-just-Simple-and-Powerful-In-Order-Traversal
+//refer to https://www.cnblogs.com/AnnieKim/archive/2013/06/15/MorrisTraversal.html
+
+/****other people's do****/
+void recoverTree(struct TreeNode* root){
+    struct TreeNode* fNode = NULL, *sNode = NULL, *pNode = NULL;
+    struct TreeNode* cur = root;
+    struct TreeNode* pred = NULL;
+    
+    /* Morris in order Traversal */
+    while(cur != NULL){       
+        if(cur->left == NULL){
+            /* Node visit */
+            if(pNode != NULL && cur->val <= pNode->val){
+                if(fNode == NULL)
+                    fNode = pNode;         
+                sNode = cur;
+            }
+            pNode = cur;
+            cur = cur->right;
+        }else {
+            pred = cur->left;
+            while(pred->right != cur && pred->right != NULL){
+                pred = pred ->right;
+            }
+            if(pred->right == NULL){
+                pred->right = cur;                
+                cur = cur->left;
+            }else {
+                /* Node visit */
+                if(pNode != NULL && cur->val <= pNode->val){
+                    if(fNode == NULL)
+                        fNode = pNode;
+                    sNode = cur;
+                }
+                pNode = cur;
+                pred->right = NULL;                
+                cur = cur->right;
+            }
+        }
+        
+    }
+    
+    /* Swap values of fNode and sNode */
+    int t = fNode->val;
+    fNode->val = sNode->val;
+    sNode->val = t;
+
+    
+    return;
+}
