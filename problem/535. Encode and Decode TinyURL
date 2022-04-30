@@ -1,0 +1,83 @@
+
+
+struct hashtable{
+    int key;
+    char *short_url;    //62^3
+    char *original_url;
+    UT_hash_handle hh;
+};
+
+struct hashtable* URL = NULL;
+
+char map[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+/** Encodes a URL to a shortened URL. */
+char* encode(char* longUrl) {
+    srandom(time(NULL));
+    struct hashtable* temp;
+    
+    while(1){
+        char tmp[4];
+        int id = 0;
+        for(int i = 0; i < 3; i++){
+            int r = random() % 62;
+            tmp[i] = map[r];
+            id = id * 62 + r;
+        }
+        tmp[3] = '\0';
+        
+        HASH_FIND_INT(URL, &id, temp);
+        if(!temp){
+            temp = malloc(sizeof(struct hashtable));
+            temp->key = id;
+            temp->short_url = malloc(4 * sizeof(char));
+            strcpy(temp->short_url, tmp);
+            temp->original_url = malloc((strlen(longUrl) + 1) * sizeof(char));
+            strcpy(temp->original_url, longUrl);
+            
+            HASH_ADD_INT(URL, key, temp);//printf("%d ",id);
+            break;
+        }
+        else if(!strcmp(temp->original_url, longUrl))
+            break;
+    }
+    
+    
+    return temp->short_url;    
+}
+
+/** Decodes a shortened URL to its original URL. */
+char* decode(char* shortUrl) {
+    int id = 0;
+    
+    for(int i = 0; i < 3; i++){
+        if ('a' <= shortUrl[i] && shortUrl[i] <= 'z')
+          id = id * 62 + shortUrl[i] - 'a';
+        if ('A' <= shortUrl[i] && shortUrl[i] <= 'Z')
+          id = id * 62 + shortUrl[i] - 'A' + 26;
+        if ('0' <= shortUrl[i] && shortUrl[i] <= '9')
+          id = id * 62 + shortUrl[i] - '0' + 52;
+    }
+    //printf("%d ",id);
+    struct hashtable* temp;
+    HASH_FIND_INT(URL, &id, temp);
+    if(temp){
+        return temp->original_url;
+    }
+    
+    
+    return;
+}
+
+// Your functions will be called as such:
+// char* s = encode(s);
+// decode(s);
+
+// char *ans, *sort = "abc123";
+// char* encode(char* longUrl){
+//     ans = longUrl;
+//     return sort;
+// }
+// char* decode(char* shortUrl){
+//     return ans;
+// }
