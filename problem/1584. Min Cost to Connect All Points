@@ -1,0 +1,160 @@
+
+
+int minCostConnectPoints(int** points, int pointsSize, int* pointsColSize){
+    int check[pointsSize];
+    memset(check, 0, sizeof(check));
+    check[0] = 1;
+    
+    int cost[pointsSize];
+    for(int i = 0; i < pointsSize; i++){
+        cost[i] = abs(points[0][0] - points[i][0]) + abs(points[0][1] - points[i][1]);
+    }
+    
+    
+    int curr = 0;
+    int sum = 0;
+    int isOK = 1;
+    while(isOK){
+        int min = INT_MAX;
+        for(int i = 1; i < pointsSize; i++){
+            if(!check[i] && cost[i] < min){
+                isOK = 0;
+                min = cost[i];
+                curr = i;
+            }
+        }
+        
+        check[curr] = 1;
+        
+        if(isOK)
+            break;
+        
+        for(int i = 1; i < pointsSize; i++){
+            if(!check[i]){
+                int temp = abs(points[curr][0] - points[i][0]) 
+                    + abs(points[curr][1] - points[i][1]);
+                
+                if(temp < cost[i])
+                    cost[i] = temp;
+            }
+        }
+        
+        isOK = 1;
+        sum += cost[curr];
+    }
+    
+    
+    return sum;
+}
+
+
+/****other people's do****/
+// #define min(a, b) (a < b ? a : b)
+// int distance(int *a, int *b)
+// {
+//     return abs(a[0] - b[0]) + abs(a[1] - b[1]);
+// }
+
+// int minCostConnectPoints(int** points, int pointsSize, int* pointsColSize){
+//     int result = 0, current_point = 0; 
+//     int minCost[pointsSize];
+//     minCost[0] = 0;
+//     for(int i = 1; i < pointsSize; i++)
+//         minCost[i] = INT_MAX;
+//     bool *visited = (bool *)calloc(pointsSize, sizeof(bool));
+//     visited[0] = true;
+// 	while (current_point >= 0) 
+//     {
+// 		visited[current_point] = true;
+// 		int minCurrent = INT_MAX;
+// 		int next_point = -1;
+// 		for(int point = 0; point < pointsSize; point++) 
+//         {
+// 			if(visited[point] || point == current_point)
+// 				continue;
+// 			minCost[point] = min(distance(points[current_point], points[point]), minCost[point]);
+// 			if(minCost[point] < minCurrent)
+//             { 
+// 				minCurrent = minCost[point];
+// 				next_point = point;
+// 			}
+// 		}
+// 		result += ((minCurrent == INT_MAX) ? 0 : minCurrent);
+// 		current_point = next_point;
+// 	}
+// 	return result;
+// }
+
+/***********/
+//https://leetcode.com/problems/min-cost-to-connect-all-points/discuss/1983874/Memory-efficent-c-implementation-of-Prims.-Beats-100-by-reducing-search-space
+/*
+Prim's algorithm for the minimal spanning tree is a simple concept. Pick a random start point and from then pick each unconnected point based on which ever point is closed to any of the connected points.
+
+Thus a simple solution would be to keep comparing all links between all diconnected points with all connected points and picking the shortest path. Such a search will be O(a * b) where a is the number of connected points, and b is the number of disconnected points. This would have to be done O(n) times, thus producting a sort of O(a * b * n) solution (keeping in mind that each pass around a will increase while b will decrease).
+
+Can we do better than this?
+
+Yes we can. The trick is that the first step we only have one connected point (a = 1), thus there is only n - 1 possible choices of links to compare. After chosing the best link we now have a = 2 though, so we're heading into exponential growth right? Actually no, because we have just compared all the links that connect to the first point. All we need to do is check the distance from each remaining disconnected point to our most recently connected point. This means we only need to do n - 2 compares, so not exponential after all.
+
+Basically the premise is that for each disconnected point, we cache the current best destination, connected, point. Each time we connect a new point, we update each cache entry if the new point is closer. This means that our cache will always contain the best destination for that point and we just need to grab whichever entry has the smallest distance. It should be noted that the number of required cache entries will shrink each step as the number of disconnected points shrinks.
+
+For my implementation I always start with connecting the last point (easy to shrink down from the end of an array). The next part is how to cache our choices effecently when the cache shrinks. A simple solution could be to tag no longer required entries, but this would mean we would have to always search n - 1 entries, skipping those that we have tagged. I instead decided to shrink the cache by swapping the most recently selected entry with the first cached entry, allowing me to start searching the cache from a later start point.
+
+This solution is memory efficent, only requiring linear memory (for the cache) rather than the exponential memory if we were to store and sort all possible links between points.*/
+
+// int manhattan_distance(const int* a, const int* b) {
+//   return
+//     ((a[0] < b[0]) ? (b[0] - a[0]) : (a[0] - b[0])) +
+//     ((a[1] < b[1]) ? (b[1] - a[1]) : (a[1] - b[1]));
+// }
+
+// int minCostConnectPoints(int** points, int pointsSize, int* pointsColSize) {
+//   int ret = 0;
+
+//   /* Start by connecting the last point first, thus we only need to check up to pointSize - 1 *
+//    * record the current best distance for the point at idx.                                   */
+//   struct Link {
+//     size_t idx;   /* The index of the unconnected point */
+//     int distance; /* Best distance to a connected point (don't need to know which one) */
+//   };
+//   struct Link* best_links = (struct Link*) malloc(sizeof(struct Link) * (pointsSize - 1));
+//   struct Link* best = best_links;
+
+//   /* Setup the initial best links to point to the last point which is always connected first */
+//   int** last_point = &points[pointsSize - 1];
+//   for (size_t idx = 0; idx < pointsSize - 1; ++idx) {
+//     best_links[idx].idx = idx;
+//     best_links[idx].distance = manhattan_distance(points[idx], *last_point);
+//     if (best->distance > best_links[idx].distance) {
+//       best = &best_links[idx];
+//     }
+//   }
+ 
+//   /* Keep picking the shortest link between a connected point and a disconnected point */
+//   for (size_t count = 0; count < pointsSize - 1; ++count) {
+//     size_t chosen_idx = best->idx;
+//     ret += best->distance;
+    
+//     /* The chosen cache link has now been used. Write the link stored at the front to the  *
+//      * location to reuse it and just strink the arrary by moving the front.                */
+//     best->idx = best_links[count].idx;
+//     best->distance = best_links[count].distance;
+   
+//     /* Update any non connected point that is closer to our newly connected point *
+//      * While we're at it, record the current best link for the next loop around   */
+//     best = &best_links[count + 1];
+//     for (size_t i = count + 1; i < pointsSize - 1; ++i) {
+//       struct Link* link = &best_links[i];
+//       int distance = manhattan_distance(points[link->idx], points[chosen_idx]);
+//       if (distance < link->distance) {
+//         link->distance = distance;
+//       }
+//       if (link->distance < best->distance) {
+//         best = link;
+//       }
+//     }
+//   }
+  
+//   free(best_links);
+//   return ret;
+// }
