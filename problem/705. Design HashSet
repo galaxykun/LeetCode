@@ -1,0 +1,183 @@
+
+
+
+typedef struct MyHashSet{
+    int id;
+    UT_hash_handle hh;
+} MyHashSet;
+
+
+MyHashSet* myHashSetCreate() {
+    MyHashSet *result = NULL;
+    MyHashSet *temp;
+    int key = -1;
+    HASH_FIND_INT(result, &key, temp);
+    if(!temp){
+        temp = (MyHashSet*)malloc(sizeof(MyHashSet));
+        temp->id = key;
+        
+        HASH_ADD_INT(result, id, temp);
+    }
+    
+    
+    return result;
+}
+
+void myHashSetAdd(MyHashSet* obj, int key) {
+    MyHashSet *temp;
+
+    HASH_FIND_INT(obj, &key, temp);
+    if(!temp){
+        temp = (MyHashSet*)malloc(sizeof(MyHashSet));
+        temp->id = key;
+        
+        HASH_ADD_INT(obj, id, temp);
+    }
+
+    
+    return;
+}
+
+void myHashSetRemove(MyHashSet* obj, int key) {
+  MyHashSet *temp;
+    HASH_FIND_INT(obj, &key, temp);
+    if(temp){
+        HASH_DEL(obj, temp);
+        free(temp);
+    }
+    
+    
+    return;
+}
+
+bool myHashSetContains(MyHashSet* obj, int key) {
+    MyHashSet *temp;//printf("1<%d %d> ",key,temp);
+    HASH_FIND_INT(obj, &key, temp);
+    
+    if(temp)
+        return true;
+    
+    
+    return false;
+}
+
+void myHashSetFree(MyHashSet* obj) {
+    MyHashSet *curr, *temp;
+    HASH_ITER(hh, obj, curr, temp){
+        HASH_DEL(obj, curr);
+        free(curr);
+    }
+    
+    
+    return;
+}
+
+/**
+ * Your MyHashSet struct will be instantiated and called as such:
+ * MyHashSet* obj = myHashSetCreate();
+ * myHashSetAdd(obj, key);
+ 
+ * myHashSetRemove(obj, key);
+ 
+ * bool param_3 = myHashSetContains(obj, key);
+ 
+ * myHashSetFree(obj);
+*/
+
+/****other people's do****/
+// #define func(a) (a % 1024)
+
+// typedef struct MyHashSet{
+//     int id;
+//     struct MyHashSet *next;
+// } MyHashSet;
+
+
+// MyHashSet* myHashSetCreate() {
+//     MyHashSet *array = (MyHashSet*)malloc(1024 * sizeof(MyHashSet));
+//     for(int i = 0; i < 1024; i++){
+//         array[i].id = -1;
+//         array[i].next = NULL;
+//     }
+    
+//     return array;
+// }
+
+// void myHashSetAdd(MyHashSet* obj, int key) {
+//     int temp = func(key);
+//     MyHashSet *curr = obj+temp;
+    
+//     while(curr){
+//         if(key == curr->id){
+//             break;
+//         }
+        
+//         if(!curr->next){
+//             curr->next = (MyHashSet*)malloc(sizeof(MyHashSet));
+//             curr = curr->next;
+//             curr->id = key;
+//             curr->next = NULL;
+//             break;
+//         } 
+    
+//         curr = curr->next;
+//     }
+    
+    
+//     return;
+// }
+
+// void myHashSetRemove(MyHashSet* obj, int key) {
+//  int temp = func(key);
+//     MyHashSet *curr = obj+temp;
+    
+//     while(curr){
+//         if(curr->next && key == curr->next->id){
+//             MyHashSet *tem = curr->next;
+//             curr->next = curr->next->next;
+//             free(tem);
+//             tem = NULL;
+//             break;
+//         }
+//         curr = curr->next;
+//     }
+    
+    
+//     return;
+// }
+
+// bool myHashSetContains(MyHashSet* obj, int key) {
+//     int temp = func(key);
+//     MyHashSet *curr = &obj[temp];
+    
+//     while(curr){
+//         if(key == curr->id){
+//             return true;
+//         }
+//         curr = curr->next;
+//     }
+    
+    
+//     return false;
+// }
+
+// void myHashSetFree(MyHashSet* obj) {
+    
+//     for(int i = 0; i < 1024; i++){
+//         MyHashSet *curr = obj[i].next;
+        
+//         while(curr){
+//             MyHashSet *temp = curr->next;
+//             free(curr);
+//             curr = temp;
+//         }
+        
+//         obj[i].next = NULL;
+//     }
+    
+//     free(obj);
+//     obj = NULL;
+    
+    
+//     return;
+// }
