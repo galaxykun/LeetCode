@@ -1,0 +1,154 @@
+
+
+
+typedef struct UndergroundSystem{
+    int key;
+    char *checkin;
+    char *checkout;
+    int checkin_time;
+    int checkout_time;
+    int in_station;
+    
+    UT_hash_handle hh;
+} UndergroundSystem;
+UndergroundSystem *customer = NULL;
+
+typedef struct AverageTime{
+    char *nkey;
+    int count;
+    int spend_time;
+    double average_time;
+    
+    UT_hash_handle hh;
+} AverageTime;
+AverageTime *averagetime = NULL;
+
+
+UndergroundSystem* undergroundSystemCreate() {
+    return NULL;
+}
+
+void undergroundSystemCheckIn(UndergroundSystem* obj, int id, char * stationName, int t) {
+    UndergroundSystem *temp;
+    HASH_FIND_INT(customer, &id, temp);
+    if(!temp){
+        temp = malloc(sizeof(UndergroundSystem));
+        temp->key = id;
+        temp->checkin = calloc(strlen(stationName) + 1, sizeof(char));
+        strcpy(temp->checkin, stationName);
+        temp->checkout = NULL;
+        temp->checkin_time = t;
+        temp->checkout_time = 0;
+        temp->in_station = 1;
+        
+        HASH_ADD_INT(customer, key, temp);
+    }
+    
+  
+    return;
+}
+
+void undergroundSystemCheckOut(UndergroundSystem* obj, int id, char * stationName, int t) {
+    UndergroundSystem *temp;
+    HASH_FIND_INT(customer, &id, temp);
+    if(temp){
+        temp->checkout = calloc(strlen(stationName) + 1, sizeof(char));
+        strcpy(temp->checkout, stationName);
+        temp->checkout_time = t;
+    }
+    else{
+        return;
+    }
+    
+    char *key_name = calloc(strlen(temp->checkin) + strlen(temp->checkout) + 5, sizeof(char));
+    strcat(key_name, temp->checkin);
+    strcat(key_name, " to ");
+    strcat(key_name, temp->checkout);
+    
+    AverageTime *tmp;
+    HASH_FIND_STR(averagetime, key_name, tmp);
+    if(!tmp){
+        tmp = malloc(sizeof(AverageTime));
+        tmp->nkey = calloc(strlen(key_name) + 1, sizeof(char));
+        strcpy(tmp->nkey, key_name);
+        tmp->count = 1;
+        tmp->spend_time = temp->checkout_time - temp->checkin_time;
+        tmp->average_time = (double)tmp->spend_time;
+        
+        HASH_ADD_STR(averagetime, nkey, tmp);
+    }
+    else{
+        tmp->count += 1;
+        tmp->spend_time += (temp->checkout_time - temp->checkin_time);
+        tmp->average_time = (double)tmp->spend_time / (double)tmp->count;
+    }
+    
+    free(key_name);
+    key_name = NULL;
+    
+    HASH_DEL(customer, temp);
+    free(temp);
+    temp = NULL;
+    
+    
+    return;
+}
+
+double undergroundSystemGetAverageTime(UndergroundSystem* obj, char * startStation, char * endStation) {
+    char *key_name = calloc(strlen(startStation) + strlen(endStation) + 5, sizeof(char));
+    strcat(key_name, startStation);
+    strcat(key_name, " to ");
+    strcat(key_name, endStation);
+    
+    AverageTime *temp;
+    HASH_FIND_STR(averagetime, key_name, temp);
+    //printf("%s %d %f\n",temp->nkey,temp->spend_time,temp->average_time);
+    if(temp){
+        return temp->average_time;
+    }
+    
+    free(key_name);
+    key_name = NULL;
+    
+    
+    return 0;
+}
+
+void undergroundSystemFree(UndergroundSystem* obj) {
+    UndergroundSystem *iter, *temp;
+    HASH_ITER(hh, customer, iter, temp){
+        HASH_DEL(customer, iter);
+        free(iter->checkin);
+        iter->checkin = NULL;
+        if(iter->checkout){
+            free(iter->checkout);
+            iter->checkout = NULL;
+        }
+        free(iter);
+        iter = NULL;
+    }
+    
+    AverageTime *it, *tmp;
+    HASH_ITER(hh, averagetime, it, tmp){
+        HASH_DEL(averagetime, it);
+        free(it->nkey);
+        it->nkey = NULL;
+        free(it);
+        it = NULL;
+    }
+    
+    
+    return;
+}
+
+/**
+ * Your UndergroundSystem struct will be instantiated and called as such:
+ * UndergroundSystem* obj = undergroundSystemCreate();
+ * undergroundSystemCheckIn(obj, id, stationName, t);
+ 
+ * undergroundSystemCheckOut(obj, id, stationName, t);
+ 
+ * double param_3 = undergroundSystemGetAverageTime(obj, startStation, endStation);
+ 
+ * undergroundSystemFree(obj);
+*/
