@@ -1,0 +1,85 @@
+
+//O(n) n = len(s > t ? s : t)
+bool backspaceCompare(char * s, char * t){
+    int s_len = strlen(s);
+    int t_len = strlen(t);
+    int s_slow = 0, s_fast = 0;
+    int t_slow = 0, t_fast = 0;
+    
+    
+    for( ; s_fast <= s_len || t_fast <= t_len; ){
+        //string s
+        if(s_fast <= s_len)
+            if(s[s_fast] == '#'){
+                s_fast++;
+
+                if(s_slow)
+                    s_slow--;
+
+                s[s_slow] = s[s_fast];
+            }
+            else{
+                s[s_slow] = s[s_fast];
+                s_fast++;
+                s_slow++;
+            }
+        
+        //string t
+        if(t_fast <= t_len)
+            if(t[t_fast] == '#'){
+                t_fast++;
+
+                if(t_slow)
+                    t_slow--; 
+
+                t[t_slow] = t[t_fast];
+            }
+            else{
+                t[t_slow] = t[t_fast];
+                t_fast++;
+                t_slow++;
+            }
+    }
+    
+
+    return !(strcmp(s,t));
+}
+
+// bool backspaceCompare(char * s, char * t){
+//     int len = strlen(s);
+//     int slow = 0, fast = 0;
+    
+//     for( ; fast <= len; ){
+//         if(s[fast] == '#'){
+//             fast++;
+//             if(slow)
+//                 slow--;
+//             s[slow] = s[fast];
+//             continue;
+//         }
+        
+//         s[slow] = s[fast];
+//         fast++;
+//         slow++;
+//     }
+    
+//     len = strlen(t);
+//     slow = 0; 
+//     fast = 0;
+//     for( ; fast <= len; ){
+//         if(t[fast] == '#'){
+//             fast++;
+//             if(slow)
+//                 slow--; 
+//             t[slow] = t[fast];
+//             continue;
+//         }
+        
+//         t[slow] = t[fast];
+//         fast++;
+//         slow++;
+//     }
+    
+//     printf("%s %s\n",s,t);
+//     return !(strcmp(s,t));
+// }
