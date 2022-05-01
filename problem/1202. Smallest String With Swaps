@@ -1,0 +1,310 @@
+
+int FindFather(int *father, int a){
+    if(father[a] != a)
+        father[a] = FindFather(father, father[a]);
+    
+    
+    return father[a];
+}
+
+void Union(int *father, int a, int b){
+    a = FindFather(father, a);
+    b = FindFather(father, b);
+    
+    father[a] = father[b];
+    
+    
+    return;
+}
+
+char * smallestStringWithSwaps(char * s, int** pairs, int pairsSize, int* pairsColSize){
+    int len = strlen(s);
+    int father[len];
+    for(int i = 0; i < len; i++){
+        father[i] = i;
+    }
+    
+    for(int i = 0; i < pairsSize; i++){
+        Union(father, pairs[i][0], pairs[i][1]);
+    }
+    
+    int **index = (int**)calloc(len, sizeof(int*));
+    
+    for(int i = 0; i < len; i++){
+        int temp = FindFather(father, i);
+        if(!index[temp]){
+            index[temp] = (int*)calloc(27,sizeof(int));
+            index[temp][26] = 26;
+        }
+        
+        index[temp][s[i] - 'a']++;
+        
+        if(s[i] - 'a' < index[temp][26])
+            index[temp][26] = s[i] - 'a';
+    }
+    
+    for(int i =0; i < len; i++){
+        int temp = father[i];
+        
+        s[i] = index[temp][26] + 'a';
+        if(--index[temp][index[temp][26]] == 0){
+            for(int j = index[temp][26]; j < 26; j++)
+                if(index[temp][j]){
+                    index[temp][26] = j;
+                    break;
+                }
+        }
+    }
+
+    for(int i = 0; i < len; i++){
+        if(index[i]){
+            free(index[i]);
+            index[i] = NULL;
+        }
+    }
+    free(index);
+    index = NULL;
+    
+    
+    return s;
+}
+
+/**********/
+//Time Limit Exceeded
+// int find(int check[], int lock[], int **path, char *s, int *record, int curr, int len){
+//     if(check[curr])
+//         return;
+    
+//     check[curr] = 1;
+    
+//     if(s[curr] < s[*record] && !lock[curr])
+//         *record = curr;
+    
+//     for(int i = 0; i < len; i++){
+//         if(path[curr][i] == -1)
+//             break;
+//         find(check, lock, path, s, record, path[curr][i], len);
+//     }
+    
+    
+//     return;
+// }
+
+// char * smallestStringWithSwaps(char * s, int** pairs, int pairsSize, int* pairsColSize){
+    
+//     int s_len = strlen(s);
+
+//     int **path = (int**)calloc(s_len, sizeof(int*));
+//     for(int i = 0; i < s_len; i++){
+//         path[i] = (int*)calloc(s_len, sizeof(int));
+//         for(int j = 0; j < s_len; j++){
+//             path[i][j] = -1;
+//         }
+//     }
+    
+//     //can take?
+//     int lock[s_len];
+//     memset(lock, 0, sizeof(lock));
+    
+//     //can go?
+//     int check[s_len];
+//     memset(check, 0, sizeof(check));
+    
+//     for(int i = 0; i < pairsSize; i++){
+//         for(int j = 0; j < s_len; j++){
+//             if(path[pairs[i][0]][j] == -1){
+//                 path[pairs[i][0]][j] = pairs[i][1];
+//                 break;
+//             }
+//             else if(path[pairs[i][0]][j] == pairs[i][1]){
+//                 break;
+//             }
+//         }
+        
+//         for(int j = 0; j < s_len; j++){
+//             if(path[pairs[i][1]][j] == -1){
+//                 path[pairs[i][1]][j] = pairs[i][0];
+//                 break;
+//             }
+//             else if(path[pairs[i][1]][j] == pairs[i][0]){
+//                 break;
+//             }
+//         }
+//     }
+    
+//     for(int i = 0; i < s_len; i++){
+//         check[i] = 1;
+//         int record = i;
+        
+//         for(int j = 0; j < s_len; j++){
+//             if(path[i][j] == -1){
+//                 break;
+//             }
+//         find(check, lock, path, s, &record, path[i][j], s_len);
+//         }
+        
+//         if(record != i){
+//             char swap = s[record];
+//             s[record] = s[i];
+//             s[i] = swap;
+//         }
+//         lock[i] = 1;
+//         memset(check, 0, sizeof(check));
+//     }
+    
+    
+//     return s;
+// }
+
+
+/****other people's do****/
+// typedef struct map_ {
+// 	int idx;
+// 	int cnt[26];
+// } map_st;
+
+// int get_root (int *parent, int a) {
+// 	if (parent[a] != a) parent[a] = get_root(parent, parent[a]);
+// 	return parent[a];
+// }
+
+// void union_find (int *parent, int a, int b) {
+// 	parent[get_root(parent, a)] = get_root(parent, b);
+// }
+
+// char * smallestStringWithSwaps (char * s, int** pairs, int pairsSize, int* pairsColSize) {
+// 	int      i, root, len = strlen(s);
+// 	int     *parent = calloc(len, sizeof(int));
+// 	map_st **maps = calloc(len, sizeof(map_st *));
+
+// 	for (i = 0; i < len; i++) {
+// 		parent[i] = i;
+// 	}
+
+// 	for (i = 0; i < pairsSize; i++) {
+// 		union_find(parent, pairs[i][0], pairs[i][1]);
+// 	}
+
+// 	for (i = 0; i < len; i++) {
+// 		root = get_root(parent, i);
+// 		if (maps[root] == NULL) {
+// 			maps[root] = calloc(1, sizeof(map_st));
+// 		}
+// 		maps[root]->cnt[s[i]-'a']++;
+// 	}
+
+// 	for (i = 0; i < len; i++) {
+// 		root = get_root(parent, i);
+// 		while (maps[root]->cnt[maps[root]->idx] == 0) maps[root]->idx++;
+// 		s[i] = 'a' + maps[root]->idx;
+// 		maps[root]->cnt[maps[root]->idx]--;
+// 	}
+
+// 	for (i = 0; i < len; i++) {
+// 		if (maps[i]) free(maps[i]);
+// 	}
+
+// 	free(maps);
+// 	free(parent);
+// 	return s;
+// }
+
+/**********/
+// int find(int *rt, int x){
+//     int rx = rt[x];
+//     if (rx == x)
+//         return x;
+//     return rt[x] = find(rt, rx);
+// }
+
+// void union_link(int *rt, int *rnk, int x, int y){
+//     int rx = find(rt, x);
+//     int ry = find(rt, y);
+//     if (rx !=ry){
+//         if (rnk[rx] > rnk[ry])
+//             rt[ry] =rx;
+//         else if (rnk[ry] > rnk[rx])
+//             rt[rx] = ry;
+//         else {
+//             rt[ry] = rx;
+//             rnk[rx] +=1;
+//         }
+//     }
+// }
+
+// /* djset contains array of 26 elements. Each array element corresponds to the count of each lower alphabet.
+//     each disjoint set can use this structure instance.
+//     each disjoint set can have lower alphabets a-z.
+// */      
+// struct djset {
+//     int chcnt[26];
+//     char ind;
+// };
+
+// char * smallestStringWithSwaps(char * s, int** pairs, int pairsSize, int* pairsColSize){
+//     int n = strlen(s);
+    
+//     int rt[n];
+//     /* frame disjoint set */
+//     int ii, jj;
+//     {
+//         int rnk[n];
+//         for (ii=0; ii< n; ii++){
+//             rt[ii] = ii;
+//             rnk[ii] = 1;
+//         }
+//         for (ii=0; ii<pairsSize; ii++)
+//             union_link(rt, rnk, pairs[ii][0], pairs[ii][1]);
+//     }
+    
+//     int numdjsets=0;
+//     int ind_djsets[n];
+//     /* get num of disjoint sets */
+//     for (ii=0; ii< n; ii++){
+//         jj = find(rt, ii);
+//         if (jj == ii) {
+//             ind_djsets[ii] = numdjsets;
+//             numdjsets++;
+//         }
+//     }
+    
+//     /* Define a djset for each disjoint set.
+//        Max number of disjoint sets can be of string length
+//     */
+//     /* define array indices of djsets */
+//     struct djset dsets[numdjsets+1];
+    
+//     memset(dsets, 0, sizeof(dsets));
+    
+//     for (ii=0; ii<n; ii++){
+//         /* get the root element corresponding to each alphabet */
+//         jj = rt[ii];
+        
+//         jj = ind_djsets[jj];
+//         /* increment the corresponding alphabet count in root djset */
+//         dsets[jj].chcnt[s[ii]-'a'] += 1;
+//     }
+    
+//     /* keep the alphabets of each disjoint set in ascending order
+//         Get the count of first non-zero elements in alphabets array,
+//         assign it, reduce , then go for next non-zero element 
+//     */
+//     for (ii=0; ii<n; ii++){
+//         /* get the root element */
+//         jj = rt[ii];
+//         jj = ind_djsets[jj];
+//         /* get the lowest existing alphabet index of disjoint set */
+//         while (!dsets[jj].chcnt[dsets[jj].ind]) dsets[jj].ind++;
+        
+//         /* assign the lowest existing alphabet of disjoint set element s[ii] */
+//         s[ii] = 'a' + dsets[jj].ind;
+        
+//         /* go for the next lowest alphabet 
+//            by reducing the count of existing alphabet,
+//            in loop, it goes to next alphabet count in next occurrence */
+//         dsets[jj].chcnt[dsets[jj].ind] -= 1;
+//     }
+    
+//     /* above loop ensures to arrange alphabets in ascending order */
+//     return s;
+// }
