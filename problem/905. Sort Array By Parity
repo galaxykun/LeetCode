@@ -1,0 +1,62 @@
+
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+
+// int cmp(const int *a, int *b){
+//     if(!(*a % 2))
+//         return 0;
+//     else if(!(*b % 2))
+//         return 1;
+//     else
+//         return -1;
+// }
+
+// int* sortArrayByParity(int* nums, int numsSize, int* returnSize){
+//     *returnSize = numsSize;
+//     qsort(nums, numsSize, sizeof(int), cmp);
+    
+    
+//     return nums;
+// }
+
+/**********/
+int* sortArrayByParity(int* nums, int numsSize, int* returnSize){
+    *returnSize = numsSize;
+    
+    int left = -1;
+    int right = numsSize;
+    
+    while(1){
+        while(!(nums[++left] % 2) && left < numsSize - 1);
+        
+        while(nums[--right] % 2 && right > 0);
+        
+        if(left >= right)
+            break;
+        
+        int swap = nums[left];
+        nums[left] = nums[right];
+        nums[right] = swap;
+    }
+
+    
+    return nums;
+}
+
+/**********/
+// int* sortArrayByParity(int* nums, int numsSize, int* returnSize){
+//     *returnSize = numsSize;
+    
+//     for(int i = 0, j = 0; i < numsSize; i++){
+//         if(nums[i] % 2 == 0){
+//             int temp = nums[j];
+//             nums[j++] = nums[i];
+//             nums[i] = temp;
+//         }
+//     }
+    
+    
+//     return nums;
+// }
