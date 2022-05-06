@@ -1,0 +1,147 @@
+// typedef struct MyStack{
+//     int val;
+//     struct MyStack *next;
+// } MyStack;
+
+
+// MyStack* myStackCreate() {
+//     MyStack *head = calloc(1, sizeof(MyStack));
+//     head->val = -1;
+//     head->next = NULL;
+    
+    
+//     return head;
+// }
+
+// void myStackPush(MyStack* obj, int x) {
+//     MyStack *push = calloc(1, sizeof(MyStack));
+//     push->val = x;
+//     push-> next = obj->next;
+//     obj->next = push;
+    
+    
+//     return;
+// }
+
+// int myStackPop(MyStack* obj) {
+//     if(!obj->next)
+//         return -1;
+    
+//     int result = obj->next->val;
+//     MyStack *temp = obj->next;
+    
+//     obj->next = obj->next->next;
+    
+//     free(temp);
+    
+    
+//     return result;
+// }
+
+// int myStackTop(MyStack* obj) {
+//     if(!obj->next)
+//         return -1;
+    
+    
+//     return obj->next->val;
+// }
+
+// bool myStackEmpty(MyStack* obj) {
+//     if(!obj->next)
+//         return true;
+    
+//     return false;
+// }
+
+// void myStackFree(MyStack* obj) {
+//     while(obj){
+//         MyStack *temp = obj->next;
+//         free(obj);
+//         obj = temp;
+//     }
+    
+    
+//     return;
+// }
+
+
+
+typedef struct MyStack{
+    int *val;
+    int curr;
+} MyStack;
+
+
+MyStack* myStackCreate() {
+    MyStack *head = malloc(sizeof(MyStack));
+    head->val = calloc(100, sizeof(int));
+    head->curr = 0;
+    
+    return head;
+}
+
+void myStackPush(MyStack* obj, int x) {
+    if(!obj)
+        return -1;
+    
+    obj->val[obj->curr++] = x;
+    
+    
+    return;
+        
+}
+
+int myStackPop(MyStack* obj) {
+    if(!obj)
+        return -1;
+    
+    if(obj->val[--obj->curr]){
+        int result = obj->val[obj->curr];
+        obj->val[obj->curr] = 0;
+        
+        return result;
+    }
+        
+    
+    return 0;
+}
+
+int myStackTop(MyStack* obj) {
+    if(!obj)
+        return -1;
+    
+    
+    return obj->val[obj->curr - 1];
+}
+
+bool myStackEmpty(MyStack* obj) {
+    if(!obj->curr)
+        return true;
+    
+    return false;
+}
+
+void myStackFree(MyStack* obj) {
+    free(obj->val);
+    obj->val =NULL;
+    
+    free(obj);
+    obj = NULL;
+    
+    
+    return;
+}
+
+/**
+ * Your MyStack struct will be instantiated and called as such:
+ * MyStack* obj = myStackCreate();
+ * myStackPush(obj, x);
+ 
+ * int param_2 = myStackPop(obj);
+ 
+ * int param_3 = myStackTop(obj);
+ 
+ * bool param_4 = myStackEmpty(obj);
+ 
+ * myStackFree(obj);
+*/
