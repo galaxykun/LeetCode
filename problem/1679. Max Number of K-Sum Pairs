@@ -1,0 +1,87 @@
+
+//Time Limit Exceeded
+// int maxOperations(int* nums, int numsSize, int k){
+//     int max = 0;
+//     int check[numsSize];
+//     memset(check, 0, sizeof(check));
+    
+//     for(int i = 0; i < numsSize; i++){
+//         if(check[i])
+//             continue;
+        
+//         for(int j = 0; j < numsSize; j++){
+//             if(check[j] || i == j)
+//                 continue;
+            
+//             if(nums[i] + nums[j] == k){
+//                 max += 1;
+//                 check[i] = 1;
+//                 check[j] = 1;
+//                 break;
+//             }
+//         }
+//     }
+    
+    
+//     return max;
+// }
+
+// int maxOperations(int* nums, int numsSize, int k){
+//     //int max = 0;
+//     int result = 0;
+//     int *count = calloc(k + 1, sizeof(int));
+//     // memset(count, 0, sizeof(count));
+    
+//     for(int i = 0; i < numsSize; i++){
+//         if(nums[i] >= k)
+//             continue;
+        
+//         count[nums[i]]++;
+//     }
+//     //printf("here");
+//     for(int i = 1; i <= k - i; i++){
+//         if(!count[i] || !count[k - i])
+//             continue;
+        
+//         if(i == k - i){
+//             if(count[i] >= 2)
+//                 result += count[i] / 2;
+            
+//             break;
+//         }
+        
+//         result += count[i] < count[k - i] ? count[i] : count[k - i];
+//     }
+    
+    
+//     return result;
+// }
+
+int cmp(const int *a, const int *b){
+    return *a > *b;
+}
+
+int maxOperations(int* nums, int numsSize, int k){
+    qsort(nums, numsSize, sizeof(int), cmp);
+    
+    int left = 0;
+    int right = numsSize - 1;
+    int result = 0;
+    
+    while(left < right){
+        if(nums[left] + nums[right] == k){
+            result += 1;
+            left++;
+            right--;
+        }
+        else if(nums[left] + nums[right] > k){
+            right--;
+        }
+        else{
+            left++;
+        } 
+    }
+    
+    
+    return result;
+}
