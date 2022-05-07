@@ -1,0 +1,84 @@
+
+//Time Limit Exceeded
+// bool find132pattern(int* nums, int numsSize){
+//     int stack[numsSize][4];
+//     memset(stack, 0, sizeof(stack));
+    
+//     for(int i = 0; i < numsSize; i++){
+        
+//         for(int j = 0; j < numsSize; j++){
+//             if(!stack[j][0]){
+//                 stack[j][0] = 1;
+//                 stack[j][1] = nums[i];
+//                 stack[j][2] = INT_MIN;
+//                 break;
+//             }
+//             else{
+//                 if(stack[j][1] >= nums[i]);
+                    
+//                 else if(nums[i] > stack[j][2]){
+//                     stack[j][2] = nums[i];
+//                 }
+//                 else if(nums[i] != stack[j][2]){
+//                     stack[j][3] = nums[i];
+//                     return true;
+//                 }
+//             }
+//         }
+//     }
+    
+    
+    
+    
+//     for(int i = 0; i < numsSize; i++)
+//     printf("<%d %d %d %d>\n",stack[i][0], stack[i][1], stack[i][2], stack[i][3]);
+//      printf("------------\n");
+//     return false;
+// }
+
+/****another people's do****/
+//https://leetcode.com/problems/132-pattern/discuss/2015130/Going-from-O(N3)-greater-O(N2)-greater-O(N)-%2B-MEME
+
+// bool find132pattern(int* nums, int numsSize){
+//     int stack[numsSize];
+//     memset(stack, 0, sizeof(stack));
+    
+//     int top = -1;
+//     int third_element = INT_MIN;
+    
+//     for(int i = numsSize - 1; i >= 0; i--){
+//         if(nums[i] < third_element)
+//             return true;
+        
+//         while(top > -1 && nums[i] > stack[top]){
+//             third_element = stack[top];
+//             top--;
+//         }
+        
+//         stack[++top] = nums[i];
+//     }
+    
+    
+//     return false;
+// }
+
+/**********/
+bool find132pattern(int *nums, int size)
+{
+    int index = size, n3 = INT_MIN;
+
+    for (int i = size - 1; i > -1; i--) {
+        if (nums[i] < n3)
+            return true;
+
+        while (index < size && nums[i] > nums[index]) {
+            n3 = nums[index];
+            index++;
+        }
+
+        index--;
+        nums[index] = nums[i];
+    }
+
+    return false;
+}
