@@ -1,0 +1,41 @@
+/**
+ * Definition for a Node.
+ * struct Node {
+ *     int val;
+ *     struct Node *left;
+ *     struct Node *right;
+ *     struct Node *next;
+ * };
+ */
+
+void create_link(struct Node* root, struct Node **storey, int level){
+    if(!root)
+        return;
+    
+    if(!storey[level]){
+        storey[level] = root;
+    }
+    else{
+        storey[level]->next = root;
+        storey[level] = root;
+    }
+    
+    create_link(root->left, storey, level + 1);
+    create_link(root->right, storey, level + 1);
+    
+    
+    return;
+}
+
+
+struct Node* connect(struct Node* root) {
+    struct Node *storey = (struct Node*)calloc(65, sizeof(struct Node*));
+    
+    create_link(root, storey, 0);
+    
+    free(storey);
+    storey = NULL;
+    
+    
+	return root;
+}
