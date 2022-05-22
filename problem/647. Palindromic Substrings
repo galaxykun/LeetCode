@@ -1,0 +1,92 @@
+
+
+int sum(int a){
+    int res = 0;
+    for(int i = 0; i < a; i++)
+        res += i;
+    
+    return res;
+}
+
+
+int countSubstrings(char * s){
+    char *start, *end;
+    char *p = s;
+    int count = 0;
+    
+    while(*p){
+        
+        start = p; end = p;
+        
+        int temp = 1;
+        while(*(end + 1) && *(end + 1) == *end){
+            temp++;
+            end++;
+        }
+        p = end + 1;
+        
+        count += sum(temp);
+        
+        while(*(end + 1) && start > s && *(start - 1) == *(end + 1)){
+            start--;
+            end++;
+        }
+        
+        int len = end - start + 1;
+        if(len == temp)
+            continue;
+
+        count += len / 2;
+        
+        if(temp > 1)
+            count -= temp / 2;
+    }
+    
+    
+    return count + strlen(s);
+}
+
+/****other's do****/
+// int countSubstrings(char * s){
+//     int beg, end, n = strlen(s), res = 0;
+//         for(int i = 0; i < n; i++) {
+//             // odd length palindromic substrings
+//             beg = i, end = i;
+//             while(beg >= 0 && end < n && s[beg--] == s[end++]) res++;
+            
+//             // even length palindromic substrings
+//             beg = i - 1, end = i;
+//             while(beg >= 0 && end < n && s[beg--] == s[end++]) res++;
+//         }
+        
+    
+//         return res;
+// }
+
+// int countSubstrings(char * s){
+//     int n=strlen(s);
+//     int ans=0;
+//     int dp[n+1][n+1];
+//     memset(dp,0,sizeof(dp));
+            
+//     for(int gap=0;gap<n;gap++){
+//         for(int i=0,j=gap;j<n;i++,j++){
+//             if(gap==0){
+//                 dp[i][j]=1;
+
+//             }
+//             else if(gap == 1 && s[i]==s[j]){
+//                 dp[i][j]=1;
+//                 ans++;
+
+//             }else if(s[i] == s[j] && dp[i+1][j-1] ==1){
+//                 dp[i][j]=1;
+//                 ans++;
+
+//             }
+//         }
+//     }
+    
+    
+//     return ans;
+// }
