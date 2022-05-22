@@ -1,0 +1,112 @@
+
+// int coinChange(int* coins, int coinsSize, int amount){
+//     if(!amount)
+//         return 0;
+    
+//     int n = coinsSize;
+    
+//     int dp[amount + 1];
+//     for(int i = 0; i <= amount; i++){
+//         dp[i] = i % coins[0] ? -1 : i / coins[0];
+//     }
+    
+//     for(int i = 1; i < n; i++){        
+//         for(int j = amount; j >= coins[i]; j--){
+//             for(int k = 0; k * coins[i] <= j; k++){
+//                if((dp[j] > dp[j - k * coins[i]] + k || dp[j] == -1) && dp[j - k * coins[i]] != -1){
+//                     dp[j] = dp[j - k * coins[i]] + k;
+//                 }
+//             }
+//         }
+//     }
+    
+    
+//     return dp[amount];
+// }
+
+//https://www.796t.com/content/1557579893.html
+//https://leetcode.com/problems/coin-change/discuss/2058941/c%2B%2B-oror-3-Solutions-oror-naive-better-efficient-approach-oror-Memoization-oror-Tabulation
+/****other's do****/
+// #define MIN(a, b) ((a) < (b) ? (a) : (b))
+
+// int cchange(int *dp, int *coins, int coinsSize, int amount)
+// {
+//     if (amount < 0)
+//         return INT_MAX;
+
+//     if (dp[amount] != -1)
+//         return dp[amount];
+    
+//     if (amount == 0)
+//         return 0;
+    
+//     int i;
+//     int best = INT_MAX;
+    
+//     for (i = 0; i < coinsSize; i++) {
+//         int coin = coins[i];
+//         int r = cchange(dp, coins, coinsSize, amount - coin);
+//         if (r != INT_MAX)
+//             best = MIN(best, r + 1);
+//     }
+
+//     dp[amount] = best;
+//     return best;
+// }
+
+// int coinChange(int* coins, int coinsSize, int amount)
+// {
+//     int *dp = malloc(sizeof(int) * (amount + 1));
+//     int i, ret;
+    
+//     for (i = 0; i <= amount; i++)
+//         dp[i] = -1; // unset
+    
+//     ret = cchange(dp, coins, coinsSize, amount);
+    
+//     free(dp);
+    
+//     return ret == INT_MAX ? -1 : ret;
+// }
+
+// int coinChange(int* coins, int len, int amount){
+//     if(amount==0)return 0;
+//     int minCoins[amount+1];
+//     minCoins[0]=0;
+//     for(int i=1;i<=amount;i++)minCoins[i]=INT_MAX;
+//     for(int i=1;i<=amount;i++){
+//         for(int j=0;j<len;j++){
+//             if(coins[j]<=i){
+//                 int temp=minCoins[i-coins[j]];
+//                 if(temp!=INT_MAX && temp+1<minCoins[i])
+//                     minCoins[i]=temp+1;
+//             }
+//         }
+//     }
+//     if(minCoins[amount]==INT_MAX)return -1;
+//     return minCoins[amount];
+// }
+
+#define min(a, b) ((a) < (b) ? (a) : (b))
+int coinChange(int* coins, int coinsSize, int amount){
+    if(!amount)
+        return 0;
+        
+    int n = coinsSize;
+    int h[amount + 1];
+    for(int i = 0; i <= amount; i++){
+        h[i] = INT_MAX - 1;
+    }
+    
+    h[0] = 0;
+    for(int i = 0; i < amount + 1; i++)
+    {
+        for(int j = 0; j < n; j++)
+        {
+            if(i >= coins[j]) h[i] = min(h[i], 1 + h[i-coins[j]]);
+        }
+    }
+    
+    
+    return (h[amount] < INT_MAX - 1) ? h[amount] : -1; 
+}
