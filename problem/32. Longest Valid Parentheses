@@ -1,0 +1,119 @@
+
+
+int longestValidParentheses(char * s){
+    int len = strlen(s);
+    if(!len)
+        return 0;
+    
+    int stack[len], index = -1;
+    memset(stack, 0, sizeof(stack));
+    
+    int valid[len];
+    memset(valid, 0, sizeof(valid));
+    
+    for(int i = 0; i < len; i++){
+        if(s[i] == '('){
+            stack[++index] = i;
+        }
+        else if(s[i] == ')' && index != -1){
+            valid[stack[index--]] = 1;
+            valid[i] = 1;
+        }
+    }
+    
+    int max = 0, count = 0;
+    for(int i = 0; i < len; i++){
+        if(!valid[i]){
+            count = 0;
+        }
+        else{
+            count++;
+        }
+        
+        if(count > max)
+            max = count;
+    }
+
+    
+    return max;
+}
+
+//https://leetcode.com/problems/longest-valid-parentheses/discuss/2068207/Java-fastest-Solution-oror-TC-100-oror-SC-99-(3-solution)
+/****other's do****/
+//C++
+// public class Solution {
+//     public int longestValidParentheses(String s) {
+//         int left = 0, right = 0, maxlength = 0;
+        
+//         for (int i = 0; i < s.length(); i++) 
+//         {
+//             if (s.charAt(i) == '(') left++;
+//             else right++;
+            
+//             if (left == right) {
+//                 maxlength = Math.max(maxlength, 2 * right);
+//             } else if (right >= left) {
+//                 left = right = 0;
+//             }
+//         }
+        
+//         left = right = 0;
+//         for (int i = s.length() - 1; i >= 0; i--) {
+            
+//             if (s.charAt(i) == '(') left++;
+//             else right++;
+            
+//             if (left == right) {
+//                 maxlength = Math.max(maxlength, 2 * left);
+//             } else if (left >= right) {
+//                 left = right = 0;
+//             }
+//         }
+        
+//         return maxlength;
+//     }
+// }
+
+/*************/
+
+//Using Stack
+
+// public class Solution {
+//     public int longestValidParentheses(String s) {
+//         Stack <Integer> stack = new Stack<>();
+//         int result = 0;
+//         stack.push(-1);
+//         for (int i = 0; i < s.length(); i++) {
+//             if (s.charAt(i) == ')' && stack.size() > 1 && s.charAt(stack.peek()) == '(') {
+//                 stack.pop();
+//                 result = Math.max(result, i - stack.peek());
+//             } else {
+//                 stack.push(i);
+//             }
+//         }
+//         return result;
+//     }
+// }
+
+/*************/
+
+//Using DP
+
+// public class Solution {
+//     public int longestValidParentheses(String s) {
+//         int[] dp = new int[s.length()];
+//         int result = 0;
+//         int leftCount = 0;
+//         for (int i = 0; i < s.length(); i++) {
+//             if (s.charAt(i) == '(') {
+//                 leftCount++;
+//             } else if (leftCount > 0){
+//                 dp[i] = dp[i - 1] + 2;
+//                 dp[i] += (i - dp[i]) >= 0 ? dp[i - dp[i]] : 0;
+//                 result = Math.max(result, dp[i]);
+//                 leftCount--;
+//             }
+//         }
+//         return result;
+//     }
+// }
