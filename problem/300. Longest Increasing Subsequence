@@ -1,0 +1,40 @@
+
+//O(nlogn)
+int lengthOfLIS(int* nums, int numsSize){
+    int n = numsSize;
+    int *queue = calloc(n, sizeof(int));
+    int count = 0;
+    
+    for(int i = 0; i < n; i++){
+        if(!count)
+            queue[count++] = nums[i];
+        
+        int left = 0, right = count - 1;
+        while(left <= right){
+            int mid = (left + right) / 2;
+            
+            if(queue[mid] == nums[i]){
+                left = mid;
+                break;
+            }
+            else if(queue[mid] < nums[i]){
+                left = mid + 1;
+            }
+            else{
+                right = mid - 1;
+            }
+            
+        }
+        
+        if(left == count){
+            queue[left] = nums[i];
+            count++;
+        }
+        else if(queue[left] > nums[i]){
+            queue[left] = nums[i];
+        }
+    }
+    
+    
+    return count;
+}
