@@ -1,0 +1,38 @@
+
+
+// if string s contains all 2^k(1 << k) combinations, then return true.
+// so, we need to find all combinations in string s .
+// then observe whether the combination in all strings s is equal to 2^k(1 << k).
+
+bool hasAllCodes(char * s, int k){
+    int len = strlen(s);
+    if(len < k)
+        return false;
+    
+    //Does this combination already exist?
+    int check[1 << k];
+    memset(check, 0, sizeof(check));
+    
+    int count = 0, sub = 0;
+    //Controls the length of the sub binary
+    int size = (1 << k) - 1;
+    
+    for(int i = 0; i < len; i++){
+        sub <<= 1;
+        //get combination
+        if(s[i] == '1'){
+            sub |= 1;
+        }
+        
+        //controls
+        sub &= size;
+        
+        if(!check[sub] && i >= k - 1){
+            count++;
+            check[sub] = 1;
+        }
+    }
+    
+    
+    return count == 1 << k ? true : false;
+}
